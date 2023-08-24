@@ -35,7 +35,27 @@ export class UserController {
       return this.httpService.result(SUCCESS, '请求成功', data);
     }
     const data = await this.userService.findAll();
-    return this.httpService.result(SUCCESS, '请求成功', data);
+    return this.httpService.result(
+      SUCCESS,
+      '请求成功',
+      data.map((user) => ({
+        id: user.id,
+        name: user.username,
+      })),
+    );
+  }
+
+  @Get(':id')
+  async getUserById(@Param('id') id: string) {
+    const data = await this.userService.findOne(id);
+    let res = null;
+    if (data) {
+      res = {
+        id: data.id,
+        name: data.username,
+      };
+    }
+    return this.httpService.result(SUCCESS, '请求成功', res);
   }
 
   @Post('create')
@@ -85,7 +105,10 @@ export class UserController {
   async findUserProfile(@Param('id') id: string) {
     if (id) {
       const res = await this.userService.findProfile(id);
-      return this.httpService.result(SUCCESS, '请求成功', res);
+      return this.httpService.result(SUCCESS, '请求成功', {
+        ...res,
+        logs_count: Number(res.logs_count),
+      });
     }
   }
 }

@@ -20,7 +20,10 @@ export class UserService {
   }
 
   findOne(id: string) {
-    return this.userRepository.findOne({ where: { id } });
+    return this.userRepository
+      .createQueryBuilder('user')
+      .where('user.id = :id', { id })
+      .getOne();
   }
 
   async add(user: User) {
@@ -38,13 +41,17 @@ export class UserService {
   }
 
   findProfile(id: string) {
-    return this.userRepository.find({
-      where: {
-        id,
-      },
-      relations: {
-        profile: true,
-      },
-    });
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndMapOne('user.profile', 'user.profile', 'profile')
+      .leftJoinAndSelect('user.logs', 'logs')
+      .select('user.id', 'id')
+      .addSelect('user.username', 'name')
+      .addSelect('profile.gender', 'gender')
+      .addSelect('profile.photo', 'photo')
+      .addSelect('profile.address', 'address')
+      .addSelect('COUNT("user.logs")', 'logs_count')
+      .where('user.id = :id', { id })
+      .getRawOne();
   }
 }

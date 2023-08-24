@@ -9,9 +9,7 @@ import Configuration from './configuration';
 import { ConfigDbEnum } from './enum/db.enum';
 import { LogsModule } from './logs/logs.module';
 import { RolosModule } from './rolos/rolos.module';
-import { log } from 'console';
 
-log(__dirname + '/**/entities/*.entity{.ts,.js}');
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -48,6 +46,8 @@ log(__dirname + '/**/entities/*.entity{.ts,.js}');
           // 初始化使用，用于同步 schema 到数据库
           synchronize: config[ConfigDbEnum.DB_SYNC],
           // autoLoadEntities: true,
+          // sql 语句错误日志
+          logging: process.env.NODE_ENV === 'development',
         } as TypeOrmModuleOptions;
       },
     }),
