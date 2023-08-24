@@ -3,8 +3,8 @@ import * as yaml from 'js-yaml';
 import { join } from 'path';
 
 const YAML_CONFIG_NAME = 'config.yml';
-const filePath = join(__dirname, '../config', YAML_CONFIG_NAME);
+const defaultFilePath = join(__dirname, '../config', YAML_CONFIG_NAME);
 
 export default () => {
-  return yaml.load(readFileSync(filePath, 'utf8'));
+  return yaml.load(readFileSync(defaultFilePath, 'utf8'));
 };

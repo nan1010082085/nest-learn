@@ -7,7 +7,11 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import Configuration from './configuration';
 import { ConfigDbEnum } from './enum/db.enum';
+import { LogsModule } from './logs/logs.module';
+import { RolosModule } from './rolos/rolos.module';
+import { log } from 'console';
 
+log(__dirname + '/**/entities/*.entity{.ts,.js}');
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -39,7 +43,7 @@ import { ConfigDbEnum } from './enum/db.enum';
           username: config[ConfigDbEnum.DB_USERNAME],
           password: config[ConfigDbEnum.DB_PASSWORD],
           database: config[ConfigDbEnum.DB_DATABASE],
-          entities: [__dirname + '/db/entity/*.entity{.ts,.js}'],
+          entities: [__dirname + '/**/entities/*.entity{.ts,.js}'],
           // entities: [User, UserLogs, Roles, UserProfile],
           // 初始化使用，用于同步 schema 到数据库
           synchronize: config[ConfigDbEnum.DB_SYNC],
@@ -49,6 +53,8 @@ import { ConfigDbEnum } from './enum/db.enum';
     }),
     UserModule,
     TestaModule,
+    LogsModule,
+    RolosModule,
   ],
   controllers: [],
   providers: [],

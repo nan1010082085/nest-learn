@@ -3,7 +3,7 @@ import { httpResolveResult } from 'src/interface/http.interface';
 
 @Injectable()
 export class HttpService {
-  result(
+  public result(
     code: httpResolveResult['code'],
     message: httpResolveResult['msg'],
     data?: httpResolveResult['data'],

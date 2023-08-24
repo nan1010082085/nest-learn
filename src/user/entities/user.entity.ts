@@ -7,9 +7,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserLogs } from './user.logs.entity';
-import { Roles } from './roles.entity';
 import { UserProfile } from './user.profile.entity';
+import { Log } from 'src/logs/entities/log.entity';
+import { Role } from 'src/rolos/entities/rolo.entity';
 
 @Entity()
 export class User {
@@ -22,13 +22,13 @@ export class User {
   @Column()
   password: string;
 
-  @OneToOne(() => UserProfile)
+  @OneToOne(() => UserProfile, (userProfile) => userProfile.user)
   profile: UserProfile;
 
-  @OneToMany(() => UserLogs, (logs) => logs.user)
-  logs: UserLogs[];
+  @OneToMany(() => Log, (log) => log.user)
+  logs: Log[];
 
-  @ManyToMany(() => Roles, (roles) => roles.users)
+  @ManyToMany(() => Role, (roles) => roles.users)
   @JoinTable({ name: 'user_roles' })
-  roles: Roles[];
+  roles: Role[];
 }
