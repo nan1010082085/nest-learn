@@ -1,13 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { httpResolveResult } from 'src/interface/http.interface';
 
 @Injectable()
 export class HttpService {
   public result(
-    code: httpResolveResult['code'],
-    message: httpResolveResult['msg'],
-    data?: httpResolveResult['data'],
+    code: HttpStatus,
+    message: string,
+    data?: unknown,
   ): httpResolveResult {
-    return data ? { code, msg: message, data: data } : { code, msg: message };
+    return data
+      ? { code, message: message, data: data }
+      : { code, message: message };
   }
 }

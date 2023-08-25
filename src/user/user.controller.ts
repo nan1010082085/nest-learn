@@ -6,6 +6,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Post,
   Put,
@@ -13,15 +15,12 @@ import {
 } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import * as Joi from 'joi';
-import { HttpResultCode } from 'src/enum/http.enum';
-import { UserErrorMessage } from './user.message';
-
-const SUCCESS = HttpResultCode.SUCCESS;
-const BODY_ERROR = HttpResultCode.BODY_ERROR;
-const PARAMS_ERROR = HttpResultCode.PARAMS_ERROR;
+import { UserErrorMessage } from '../common/error/error-message';
 
 @Controller('user')
 export class UserController {
+  private message = new UserErrorMessage('user');
+
   constructor(
     private readonly userService: UserService,
     private readonly configService: ConfigService,
@@ -30,13 +29,17 @@ export class UserController {
 
   @Get('all')
   async getUserAll(@Query('username') username?: string) {
-    if (username) {
+    const schema = Joi.object({
+      username: Joi.string().empty(),
+    });
+    const v = schema.validate(username).value;
+    if (v) {
       const data = await this.userService.find(username);
-      return this.httpService.result(SUCCESS, '请求成功', data);
+      return this.httpService.result(HttpStatus.OK, '请求成功', data);
     }
     const data = await this.userService.findAll();
     return this.httpService.result(
-      SUCCESS,
+      HttpStatus.OK,
       '请求成功',
       data.map((user) => ({
         id: user.id,
@@ -55,7 +58,7 @@ export class UserController {
         name: data.username,
       };
     }
-    return this.httpService.result(SUCCESS, '请求成功', res);
+    return this.httpService.result(HttpStatus.OK, '请求成功', res);
   }
 
   @Post('create')
@@ -68,36 +71,40 @@ export class UserController {
     try {
       await schema.validateAsync(user);
       const res = await this.userService.add(user);
-      return this.httpService.result(SUCCESS, '操作成功', res);
+      return this.httpService.result(HttpStatus.OK, '操作成功', res);
     } catch (err) {
-      // 自定义类组合joi err 返回错误信息
-      return new UserErrorMessage(this.httpService).text(BODY_ERROR, err);
+      throw new HttpException(
+        this.message.text(err),
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @Put('update/:id')
   async updateUser(@Param('id') id: string, @Body() user: Partial<User>) {
-    if (!id) this.httpService.result(400, '未传递ID');
-    if (id) {
+    try {
       const res = await this.userService.update(+id, user);
-      if (res.affected) {
-        return this.httpService.result(SUCCESS, '操作成功');
-      } else {
-        return this.httpService.result(PARAMS_ERROR, '未找到对应的用户ID');
-      }
+      if (!res.affected) throw new Error(`${res.affected}`);
+      return this.httpService.result(HttpStatus.OK, '操作成功');
+    } catch (err) {
+      throw new HttpException(
+        '未找到对应的用户ID',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
   @Delete('delete')
   async deleteUser(@Query('id') id: string) {
-    if (!id) this.httpService.result(400, '未传递ID');
-    if (id) {
+    try {
       const res = await this.userService.remove(id);
-      if (res.affected) {
-        return this.httpService.result(SUCCESS, '操作成功');
-      } else {
-        return this.httpService.result(PARAMS_ERROR, '未找到对应的用户ID');
-      }
+      if (!res.affected) throw new Error(`${res.affected}`);
+      return this.httpService.result(HttpStatus.OK, '操作成功');
+    } catch (err) {
+      throw new HttpException(
+        '未找到对应的用户ID',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -105,7 +112,7 @@ export class UserController {
   async findUserProfile(@Param('id') id: string) {
     if (id) {
       const res = await this.userService.findProfile(id);
-      return this.httpService.result(SUCCESS, '请求成功', {
+      return this.httpService.result(HttpStatus.OK, '请求成功', {
         ...res,
         logs_count: Number(res.logs_count),
       });

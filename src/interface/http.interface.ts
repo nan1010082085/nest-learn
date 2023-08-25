@@ -1,5 +1,7 @@
+import { HttpStatus } from '@nestjs/common';
+
 export interface httpResolveResult {
-  code: number;
-  msg: string;
+  code: HttpStatus | number;
+  message: string;
   data?: unknown;
 }

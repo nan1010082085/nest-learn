@@ -6,12 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  HttpStatus,
 } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
 import { HttpService } from 'src/common/http/http.service';
-import { HttpResultCode } from 'src/enum/http.enum';
 import { UserService } from 'src/user/user.service';
 
 @Controller('logs')
@@ -30,14 +30,14 @@ export class LogsController {
   @Get()
   async findAll() {
     const data = await this.logsService.findAll();
-    return this.httpService.result(HttpResultCode.SUCCESS, '请求成功', data);
+    return this.httpService.result(HttpStatus.OK, '请求成功', data);
   }
 
   @Get('byUser/:userId')
   async getLogsByUser(@Param('userId') userId: string) {
     const user = await this.userService.findOne(userId);
     const data = await this.logsService.findLogsByUser(user);
-    return this.httpService.result(HttpResultCode.SUCCESS, '请求成功', data);
+    return this.httpService.result(HttpStatus.OK, '请求成功', data);
   }
 
   @Get(':id')
