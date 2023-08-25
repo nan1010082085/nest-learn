@@ -1,4 +1,6 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateLogDto } from './create-log.dto';
 
-export class UpdateLogDto extends PartialType(CreateLogDto) {}
+export class UpdateLogDto extends PartialType(CreateLogDto) {
+  readonly id: string;
+}

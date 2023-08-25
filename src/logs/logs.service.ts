@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
-import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
 import { Repository } from 'typeorm';
 import { Log } from './entities/log.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
+import { HttpService } from 'src/common/http/http.service';
 
 @Injectable()
 export class LogsService {
   constructor(
     @InjectRepository(Log) private readonly logRepository: Repository<Log>,
+    private httpService: HttpService,
   ) {}
 
-  create(createLogDto: CreateLogDto) {
-    return 'This action adds a new log';
+  async create(createLogDto: Omit<Log, 'id'>) {
+    const logs = this.logRepository.create(createLogDto);
+    const Log = await this.logRepository.save(logs);
+    return Log.id;
   }
 
   findAll() {

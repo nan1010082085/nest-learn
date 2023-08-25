@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   HttpStatus,
+  Req,
 } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { CreateLogDto } from './dto/create-log.dto';
 import { UpdateLogDto } from './dto/update-log.dto';
 import { HttpService } from 'src/common/http/http.service';
 import { UserService } from 'src/user/user.service';
+import { Log } from './entities/log.entity';
 
 @Controller('logs')
 export class LogsController {
@@ -22,9 +24,23 @@ export class LogsController {
     private readonly userService: UserService,
   ) {}
 
-  @Post()
-  create(@Body() createLogDto: CreateLogDto) {
-    return this.logsService.create(createLogDto);
+  @Post(':id')
+  async create(
+    @Req() request: Request,
+    @Param('id') userId: string,
+    @Body() createLogDto: CreateLogDto,
+  ) {
+    const path = request.url;
+    const method = request.method;
+    const user = await this.userService.findOne(userId);
+    const logSchema: Omit<Log, 'id'> = {
+      path,
+      method,
+      user: user,
+      ...createLogDto,
+    };
+    const data = await this.logsService.create(logSchema);
+    return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
   @Get()
