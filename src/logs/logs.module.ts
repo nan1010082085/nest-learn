@@ -13,6 +13,40 @@ import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { ConfigLogEnum } from 'src/enum/db.enum';
 
+interface CreateDailyRotateFileOptions {
+  dirname?: string;
+  formatSimple?: boolean;
+}
+
+function createDailyRotateFile(
+  level: string,
+  fileName: string,
+  options: CreateDailyRotateFileOptions,
+) {
+  const { dirname = 'logs', formatSimple = true } = options;
+  return new DailyRotateFile({
+    // 文件名称
+    dirname,
+    // 等级
+    level,
+    // 日志文件名称
+    filename: `${fileName}-%DATE%.log`,
+    // 格式化
+    datePattern: 'YYYY-MM-DD-HH',
+    // 文件压缩
+    zippedArchive: true,
+    // 文件最大大小 20m(兆)
+    maxSize: '10m',
+    // 最大文件天数 14d(天)
+    maxFiles: '14d',
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.ms(),
+      formatSimple ? winston.format.simple() : null,
+    ),
+  });
+}
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([Log, User]),
@@ -20,6 +54,8 @@ import { ConfigLogEnum } from 'src/enum/db.enum';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const config = (key: string) => configService.get(`log.${key}`);
+
+        const dir = config(ConfigLogEnum.PATH);
 
         const consoleTransport = new Console({
           level: 'info',
@@ -30,48 +66,19 @@ import { ConfigLogEnum } from 'src/enum/db.enum';
           ),
         });
 
-        const dailyTransport = new DailyRotateFile({
-          // 文件名称
-          dirname: config(ConfigLogEnum.PATH),
-          // 等级
-          level: 'warn',
-          // 日志文件名称
-          filename: 'application-%DATE%.log',
-          // 格式化
-          datePattern: 'YYYY-MM-DD-HH',
-          // 文件压缩
-          zippedArchive: true,
-          // 文件最大大小 20m(兆)
-          maxSize: '10m',
-          // 最大文件天数 14d(天)
-          maxFiles: '14d',
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.ms(),
-            winston.format.simple(),
-          ),
-        });
-
-        const dailyInfoTransport = new DailyRotateFile({
-          // 文件名称
-          dirname: config(ConfigLogEnum.PATH),
-          level: config(ConfigLogEnum.LEVEL),
-          filename: 'info-%DATE%.log',
-          datePattern: 'YYYY-MM-DD-HH',
-          zippedArchive: true,
-          maxSize: '10m',
-          maxFiles: '14d',
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.ms(),
-          ),
-        });
-
         return {
           transports: [
             consoleTransport,
             ...(config(ConfigLogEnum.ON)
-              ? [dailyTransport, dailyInfoTransport]
+              ? [
+                  createDailyRotateFile('info', 'info', {
+                    dirname: dir,
+                  }),
+                  createDailyRotateFile('warn', 'error', {
+                    dirname: dir,
+                    formatSimple: false,
+                  }),
+                ]
               : []),
           ],
         };

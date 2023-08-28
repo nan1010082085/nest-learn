@@ -11,5 +11,4 @@ export enum ConfigDbEnum {
 export enum ConfigLogEnum {
   PATH = 'PATH',
   ON = 'ON',
-  LEVEL = 'LEVEL',
 }

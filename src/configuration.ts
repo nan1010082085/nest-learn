@@ -11,7 +11,8 @@ const ENV = process.env.NODE_ENV;
 const CURRENT = ENV === 'development' ? DEVELOPMENT_CONFIG : PRODUCTION_CONFIG;
 
 const paramConfigByYml = (yml) => {
-  const ymlFIle = readFileSync(join(__dirname, '../config', yml), 'utf8');
+  const dir = join(__dirname, '../../config', yml);
+  const ymlFIle = readFileSync(dir, 'utf8');
   return yaml.load(ymlFIle);
 };
 
