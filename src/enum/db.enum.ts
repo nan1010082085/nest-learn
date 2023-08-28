@@ -7,3 +7,9 @@ export enum ConfigDbEnum {
   DB_PASSWORD = 'DB_PASSWORD',
   DB_SYNC = 'DB_SYNC',
 }
+
+export enum ConfigLogEnum {
+  PATH = 'PATH',
+  ON = 'ON',
+  LEVEL = 'LEVEL',
+}

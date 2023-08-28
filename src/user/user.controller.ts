@@ -12,19 +12,23 @@ import {
   Post,
   Put,
   Query,
+  Inject,
+  LoggerService,
+  NotFoundException,
 } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import * as Joi from 'joi';
 import { UserErrorMessage } from '../common/error/error-message';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 @Controller('user')
 export class UserController {
   private message = new UserErrorMessage('user');
-
   constructor(
     private readonly userService: UserService,
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER) private logger: LoggerService,
   ) {}
 
   @Get('all')
@@ -57,8 +61,9 @@ export class UserController {
         id: data.id,
         name: data.username,
       };
+      return this.httpService.result(HttpStatus.OK, '请求成功', res);
     }
-    return this.httpService.result(HttpStatus.OK, '请求成功', res);
+    throw new NotFoundException('未找到对应数据');
   }
 
   @Post('create')

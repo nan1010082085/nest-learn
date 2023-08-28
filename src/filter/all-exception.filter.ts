@@ -4,14 +4,21 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Inject,
+  LoggerService,
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 import * as requestIp from 'request-ip';
 
 @Catch()
 export class AllExceptionFilter<T> implements ExceptionFilter {
-  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+  constructor(
+    private readonly httpAdapterHost: HttpAdapterHost,
+    @Inject(WINSTON_MODULE_NEST_PROVIDER)
+    private readonly logger: LoggerService,
+  ) {}
 
   catch(exception: T, host: ArgumentsHost) {
     const { httpAdapter } = this.httpAdapterHost;
@@ -41,6 +48,8 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
       exception: exception['name'],
       error: exception['response'],
     };
+
+    this.logger.error(responseBody.message, responseBody, responseBody.path);
 
     httpAdapter.reply(response, responseBody, status);
   }

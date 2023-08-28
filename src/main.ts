@@ -1,12 +1,11 @@
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { AllExceptionFilter } from './filter/all-exception.filter';
-import { HttpException } from '@nestjs/common';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     // 全局是否开启日志， 默认 true
-    logger: ['log', 'error', 'warn'],
   });
 
   // 设置Api全局前缀
@@ -15,7 +14,11 @@ async function bootstrap() {
   // 获取http adapter 实例
   const httpAdapterHost = app.get(HttpAdapterHost);
 
-  app.useGlobalFilters(new AllExceptionFilter<HttpException>(httpAdapterHost));
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+
+  app.useLogger(logger);
+
+  app.useGlobalFilters(new AllExceptionFilter(httpAdapterHost, logger));
 
   // 监听端口号
   await app.listen(3038);
