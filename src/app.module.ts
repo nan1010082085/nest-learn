@@ -1,4 +1,4 @@
-import { Global, Logger, Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { TestaModule } from './testa/testa.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
@@ -8,7 +8,7 @@ import * as Joi from 'joi';
 import Configuration from './configuration';
 import { ConfigDbEnum } from './enum/db.enum';
 import { LogsModule } from './logs/logs.module';
-import { RolosModule } from './rolos/rolos.module';
+import { RolesModule } from './roles/roles.module';
 
 @Global()
 @Module({
@@ -55,7 +55,7 @@ import { RolosModule } from './rolos/rolos.module';
     LogsModule,
     UserModule,
     TestaModule,
-    RolosModule,
+    RolesModule,
   ],
   controllers: [],
   providers: [],

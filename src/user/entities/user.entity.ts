@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { UserProfile } from './user.profile.entity';
 import { Log } from 'src/logs/entities/log.entity';
-import { Role } from 'src/rolos/entities/rolo.entity';
+import { Roles } from 'src/roles/entities/roles.entity';
 
 @Entity()
 export class User {
@@ -28,7 +28,7 @@ export class User {
   @OneToMany(() => Log, (log) => log.user)
   logs: Log[];
 
-  @ManyToMany(() => Role, (roles) => roles.users)
+  @ManyToMany(() => Roles, (roles) => roles.users)
   @JoinTable({ name: 'user_roles' })
-  roles: Role[];
+  roles: Roles[];
 }
