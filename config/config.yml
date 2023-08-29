@@ -9,5 +9,5 @@ db:
   DB_SYNC: true
 log:
   PATH: logs
-  ON: true
+  ON: false
   LEVEL: 'info'

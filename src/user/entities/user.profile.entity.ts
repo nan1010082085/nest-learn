@@ -13,7 +13,7 @@ export class UserProfile {
   id: string;
 
   @Column()
-  gender: string;
+  ganger: string;
 
   @Column()
   photo: string;

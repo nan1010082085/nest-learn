@@ -24,6 +24,15 @@ function createDailyRotateFile(
   options: CreateDailyRotateFileOptions,
 ) {
   const { dirname = 'logs', formatSimple = true } = options;
+  const combine = () =>
+    formatSimple
+      ? [
+          winston.format.timestamp(),
+          winston.format.ms(),
+          winston.format.simple(),
+        ]
+      : [winston.format.timestamp(), winston.format.ms()];
+
   return new DailyRotateFile({
     // 文件名称
     dirname,
@@ -39,11 +48,7 @@ function createDailyRotateFile(
     maxSize: '10m',
     // 最大文件天数 14d(天)
     maxFiles: '14d',
-    format: winston.format.combine(
-      winston.format.timestamp(),
-      winston.format.ms(),
-      formatSimple ? winston.format.simple() : null,
-    ),
+    format: winston.format.combine(...combine()),
   });
 }
 

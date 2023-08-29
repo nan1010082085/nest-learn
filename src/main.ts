@@ -4,9 +4,7 @@ import { AllExceptionFilter } from './filter/all-exception.filter';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    // 全局是否开启日志， 默认 true
-  });
+  const app = await NestFactory.create(AppModule);
 
   // 设置Api全局前缀
   app.setGlobalPrefix('api/v1');

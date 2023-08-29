@@ -20,6 +20,9 @@ import { User } from 'src/user/entities/user.entity';
 import * as Joi from 'joi';
 import { UserErrorMessage } from '../common/error/error-message';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { log } from 'console';
+import { GetUserDto, validateQuery } from './dto/get-user.dto';
+import { CommonService } from 'src/common/common.service';
 
 @Controller('user')
 export class UserController {
@@ -29,27 +32,23 @@ export class UserController {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
     @Inject(WINSTON_MODULE_NEST_PROVIDER) private logger: LoggerService,
+    private commonService: CommonService,
   ) {}
 
   @Get('all')
-  async getUserAll(@Query('username') username?: string) {
-    const schema = Joi.object({
-      username: Joi.string().empty(),
-    });
-    const v = schema.validate(username).value;
-    if (v) {
-      const data = await this.userService.find(username);
+  async getUserAll(@Query() query: GetUserDto) {
+    log('getUserAll', query);
+    const schema = validateQuery(query);
+    try {
+      await schema.validateAsync(query);
+      const data = await this.userService.findAll(
+        // 去除 null
+        this.commonService.trimObject<GetUserDto>(query),
+      );
       return this.httpService.result(HttpStatus.OK, '请求成功', data);
+    } catch (err) {
+      throw new HttpException('请检查参数', HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    const data = await this.userService.findAll();
-    return this.httpService.result(
-      HttpStatus.OK,
-      '请求成功',
-      data.map((user) => ({
-        id: user.id,
-        name: user.username,
-      })),
-    );
   }
 
   @Get(':id')
