@@ -1,22 +1,22 @@
+import { UserService } from 'src/user/user.service';
 import { Injectable } from '@nestjs/common';
-import { UpdateLogDto } from './dto/update-log.dto';
 import { Repository } from 'typeorm';
 import { Log } from './entities/log.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { HttpService } from 'src/common/http/http.service';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
 @Injectable()
 export class LogsService {
   constructor(
     @InjectRepository(Log) private readonly logRepository: Repository<Log>,
-    private httpService: HttpService,
+    private userService: UserService,
   ) {}
 
-  async create(createLogDto: Omit<Log, 'id'>) {
-    const logs = this.logRepository.create(createLogDto);
-    const Log = await this.logRepository.save(logs);
-    return Log.id;
+  async create(userId: string, dto: Partial<Log>) {
+    const user = await this.userService.findOne(userId);
+    const newLog = this.logRepository.merge({ user } as Log, dto);
+    const logs = this.logRepository.create(newLog);
+    return this.logRepository.save(logs);
   }
 
   findAll() {
@@ -27,22 +27,41 @@ export class LogsService {
     return this.logRepository.findOne({ where: { id } });
   }
 
-  findLogsByUser(user: User) {
-    return this.logRepository.find({
-      where: {
-        user,
+  async findLogsByUser(userId: string, query: PaginationDto) {
+    const user = await this.userService.findOne(userId);
+
+    if (!user) {
+      throw new Error('未获取到用户');
+    }
+
+    const logsQueryBuilder = this.logRepository
+      .createQueryBuilder('log')
+      .leftJoinAndSelect('log.user', 'user');
+
+    logsQueryBuilder
+      .select('log.id', 'id')
+      .addSelect('log.path', 'path')
+      .addSelect('log.method', 'method')
+      .addSelect('log.result', 'result')
+      .addSelect('user.username', 'username');
+
+    const { page, limit } = query;
+
+    const take = limit || 10;
+    const skip = ((page || 1) - 1) * take;
+
+    const data = await logsQueryBuilder
+      .where('user.id = :id', { id: user.id })
+      .take(take)
+      .skip(skip)
+      .getRawMany();
+    return {
+      data,
+      page: {
+        page,
+        limit,
+        total: await logsQueryBuilder.getCount(),
       },
-      // relations: {
-      //   user: true,
-      // },
-    });
-  }
-
-  update(id: number, updateLogDto: UpdateLogDto) {
-    return `This action updates a #${id} log`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} log`;
+    };
   }
 }

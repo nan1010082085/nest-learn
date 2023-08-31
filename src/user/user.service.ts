@@ -3,39 +3,49 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { GetUserDto } from './dto/get-user.dto';
-import { log } from 'console';
+import { QueryBuilderTypeORM } from 'src/utils/query.typorm';
+import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    private readonly rolesService: RolesService,
   ) {}
 
-  findAll(_query: GetUserDto) {
-    log(_query);
+  async findAll(_query: GetUserDto) {
     const { limit, page, username, ganger } = _query;
 
     const take = limit || 10;
     const skip = ((page || 1) - 1) * take;
 
-    return this.userRepository.find({
-      select: {
-        id: true,
-        username: true,
+    const userQueryBuilder = this.userRepository.createQueryBuilder('user');
+
+    const queryBuilder = userQueryBuilder
+      .leftJoinAndSelect('user.profile', 'profile')
+      .leftJoinAndSelect('user.roles', 'roles');
+
+    const whereObj = {
+      'user.username': username,
+      'profile.ganger': ganger,
+    };
+
+    const _ = new QueryBuilderTypeORM<User>(queryBuilder).whereBuilder(
+      whereObj,
+    );
+
+    const data = await _.take(take).skip(skip).getMany();
+    const total = await _.getCount();
+
+    return {
+      data,
+      page: {
+        page,
+        limit,
+        total,
       },
-      relations: {
-        profile: true,
-        roles: true,
-      },
-      where: {
-        username,
-        profile: {
-          ganger,
-        },
-      },
-      take,
-      skip,
-    });
+    };
   }
 
   find(username: string) {
@@ -50,19 +60,53 @@ export class UserService {
   }
 
   async add(user: User) {
-    const userTmp = this.userRepository.create(user);
-    const USER = await this.userRepository.save(userTmp);
-    return USER.id;
+    if (user.roles instanceof Array) {
+      user.roles = await this.rolesService.findByRolesName(user);
+      const userTmp = this.userRepository.create(user);
+      try {
+        return await this.userRepository.save(userTmp);
+      } catch (err) {
+        throw err;
+      }
+    }
   }
 
-  async update(id: number, user: Partial<User>) {
-    return this.userRepository.update(id, user);
+  async update(id: string, dto: User) {
+    const userTmp = await this.findOneProfile(id);
+    if (!userTmp) {
+      throw new Error('无法更新相关profile字段');
+    }
+    const newUser = this.userRepository.merge(userTmp, dto);
+    if (dto.roles instanceof Array) {
+      const roles = await this.rolesService.findByRolesName(dto);
+      newUser.roles = roles;
+    }
+    // 更新新的关系实体
+    return this.userRepository.save(newUser);
+    // 只使用对单个实体进行更新操作
+    // return this.userRepository.update(id, user);
   }
 
-  remove(id: string) {
-    return this.userRepository.delete(id);
+  async remove(id: string) {
+    // delete 硬删除
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new Error('未找到对应的用户ID');
+    }
+    const result = await this.userRepository.remove(user);
+    return result;
   }
 
+  // 查询携带profile实体的用户数据
+  findOneProfile(id: string) {
+    return this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.profile', 'profile')
+      .where('user.id = :id', { id })
+      .getOne();
+  }
+
+  // 查询用户详情（原始数据）
   findProfile(id: string) {
     return this.userRepository
       .createQueryBuilder('user')

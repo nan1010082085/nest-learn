@@ -7,9 +7,15 @@ export class HttpService {
     code: HttpStatus,
     message: string,
     data?: unknown,
+    page?: unknown,
   ): httpResolveResult {
-    return data
-      ? { code, message: message, data: data }
-      : { code, message: message };
+    const result = { code, message: message };
+    if (data) {
+      Reflect.set(result, 'data', data);
+    }
+    if (page) {
+      Reflect.set(result, 'page', page);
+    }
+    return result;
   }
 }

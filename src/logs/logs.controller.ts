@@ -3,25 +3,23 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
-  Delete,
   HttpStatus,
   Req,
+  Query,
+  HttpException,
 } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { CreateLogDto } from './dto/create-log.dto';
-import { UpdateLogDto } from './dto/update-log.dto';
 import { HttpService } from 'src/common/http/http.service';
-import { UserService } from 'src/user/user.service';
 import { Log } from './entities/log.entity';
+import { PaginationDto } from 'src/dto/pagination.dto';
 
 @Controller('logs')
 export class LogsController {
   constructor(
-    private readonly logsService: LogsService,
     private readonly httpService: HttpService,
-    private readonly userService: UserService,
+    private readonly logsService: LogsService,
   ) {}
 
   @Post(':id')
@@ -32,14 +30,14 @@ export class LogsController {
   ) {
     const path = request.url;
     const method = request.method;
-    const user = await this.userService.findOne(userId);
-    const logSchema: Omit<Log, 'id'> = {
-      path,
-      method,
-      user: user,
-      ...createLogDto,
-    };
-    const data = await this.logsService.create(logSchema);
+    const logSchema: Partial<Log> = Object.assign(
+      {
+        path,
+        method,
+      },
+      createLogDto,
+    );
+    const data = await this.logsService.create(userId, logSchema);
     return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
@@ -50,24 +48,24 @@ export class LogsController {
   }
 
   @Get('byUser/:userId')
-  async getLogsByUser(@Param('userId') userId: string) {
-    const user = await this.userService.findOne(userId);
-    const data = await this.logsService.findLogsByUser(user);
-    return this.httpService.result(HttpStatus.OK, '请求成功', data);
+  async getLogsByUser(
+    @Query() query: PaginationDto,
+    @Param('userId') userId: string,
+  ) {
+    const _query = query || ({} as PaginationDto);
+    try {
+      const { data, page } = await this.logsService.findLogsByUser(
+        userId,
+        _query,
+      );
+      return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
+    } catch (err) {
+      throw new HttpException(err, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.logsService.findOne(id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLogDto: UpdateLogDto) {
-    return this.logsService.update(+id, updateLogDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.logsService.remove(+id);
   }
 }

@@ -1,5 +1,4 @@
 import { Global, Module } from '@nestjs/common';
-import { TestaModule } from './testa/testa.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from './common/http/http.module';
@@ -7,8 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import Configuration from './configuration';
 import { LogsModule } from './logs/logs.module';
-import { RolesModule } from './roles/roles.module';
 import { connectionParams } from 'ormconfig';
+import { RolesModule } from './roles/roles.module';
 
 @Global()
 @Module({
@@ -34,9 +33,8 @@ import { connectionParams } from 'ormconfig';
     }),
     TypeOrmModule.forRoot(connectionParams),
     HttpModule.forRoot({ isGlobal: true }),
-    LogsModule,
     UserModule,
-    TestaModule,
+    LogsModule,
     RolesModule,
   ],
   controllers: [],

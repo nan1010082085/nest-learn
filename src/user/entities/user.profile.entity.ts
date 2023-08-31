@@ -9,7 +9,7 @@ import { User } from './user.entity';
 
 @Entity()
 export class UserProfile {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -21,7 +21,7 @@ export class UserProfile {
   @Column()
   address: string;
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
 }

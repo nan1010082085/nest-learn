@@ -18,7 +18,7 @@ function connectionOptions() {
     synchronize: config(ConfigDbEnum.DB_SYNC),
     // autoLoadEntities: true,
     // sql 语句错误日志
-    logging: process.env.NODE_ENV === 'development',
+    // logging: process.env.NODE_ENV === 'development',
   } as TypeOrmModuleOptions;
 }
 

@@ -1,5 +1,4 @@
 import { HttpService } from './../common/http/http.service';
-import { ConfigService } from '@nestjs/config';
 import { UserService } from './user.service';
 import {
   Body,
@@ -12,43 +11,35 @@ import {
   Post,
   Put,
   Query,
-  Inject,
-  LoggerService,
   NotFoundException,
+  UseFilters,
 } from '@nestjs/common';
 import { User } from 'src/user/entities/user.entity';
 import * as Joi from 'joi';
 import { UserErrorMessage } from '../common/error/error-message';
-import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import { log } from 'console';
 import { GetUserDto, validateQuery } from './dto/get-user.dto';
-import { CommonService } from 'src/common/common.service';
+import { TypeormFilter } from 'src/filter/typeorm.filter';
+import { log } from 'console';
 
 @Controller('user')
+@UseFilters(new TypeormFilter())
 export class UserController {
   private message = new UserErrorMessage('user');
   constructor(
-    private readonly userService: UserService,
-    private readonly configService: ConfigService,
     private readonly httpService: HttpService,
-    @Inject(WINSTON_MODULE_NEST_PROVIDER) private logger: LoggerService,
-    private commonService: CommonService,
+    private readonly userService: UserService,
   ) {}
 
   @Get('all')
   async getUserAll(@Query() query: GetUserDto) {
-    log('getUserAll', query);
     const schema = validateQuery(query);
     try {
       await schema.validateAsync(query);
-      const data = await this.userService.findAll(
-        // 去除 null
-        this.commonService.trimObject<GetUserDto>(query),
-      );
-      return this.httpService.result(HttpStatus.OK, '请求成功', data);
     } catch (err) {
       throw new HttpException('请检查参数', HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    const { data, page } = await this.userService.findAll(query);
+    return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }
 
   @Get(':id')
@@ -66,49 +57,46 @@ export class UserController {
   }
 
   @Post('create')
-  async createUser(@Body() user: User) {
+  async createUser(@Body() user: any) {
     // Joi校验数据完整性
     const schema = Joi.object({
       username: Joi.string().empty().required(),
       password: Joi.string().empty().alphanum().min(6).required(),
+      profile: Joi.any(),
+      roles: Joi.any(),
     });
     try {
       await schema.validateAsync(user);
-      const res = await this.userService.add(user);
-      return this.httpService.result(HttpStatus.OK, '操作成功', res);
     } catch (err) {
       throw new HttpException(
         this.message.text(err),
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+    const result = await this.userService.add(user);
+    let data = null;
+    if (result.id) data = result.id;
+    return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
   @Put('update/:id')
-  async updateUser(@Param('id') id: string, @Body() user: Partial<User>) {
+  async updateUser(@Param('id') id: string, @Body() dto: User) {
     try {
-      const res = await this.userService.update(+id, user);
-      if (!res.affected) throw new Error(`${res.affected}`);
-      return this.httpService.result(HttpStatus.OK, '操作成功');
+      const result = await this.userService.update(id, dto);
+      log(result);
     } catch (err) {
-      throw new HttpException(
-        '未找到对应的用户ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+    return this.httpService.result(HttpStatus.OK, '操作成功');
   }
 
   @Delete('delete')
   async deleteUser(@Query('id') id: string) {
     try {
-      const res = await this.userService.remove(id);
-      if (!res.affected) throw new Error(`${res.affected}`);
-      return this.httpService.result(HttpStatus.OK, '操作成功');
+      const user = await this.userService.remove(id);
+      return this.httpService.result(HttpStatus.OK, '操作成功', user.id);
     } catch (err) {
-      throw new HttpException(
-        '未找到对应的用户ID',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
