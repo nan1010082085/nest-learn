@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
-import { GetUserDto } from './dto/get-user.dto';
+import { QueryUserDto } from './dto/get-user.dto';
 import { QueryBuilderTypeORM } from 'src/utils/interaction.typorm';
 import { RolesService } from 'src/roles/roles.service';
 
@@ -14,7 +14,7 @@ export class UserService {
     private readonly rolesService: RolesService,
   ) {}
 
-  async findAll(_query: GetUserDto) {
+  async findAll(_query: QueryUserDto) {
     const { limit, page, username, ganger } = _query;
 
     const take = limit || 10;

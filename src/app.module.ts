@@ -8,6 +8,7 @@ import Configuration from './configuration';
 import { LogsModule } from './logs/logs.module';
 import { connectionParams } from 'ormconfig';
 import { RolesModule } from './roles/roles.module';
+import { AuthModule } from './auth/auth.module';
 
 @Global()
 @Module({
@@ -36,6 +37,7 @@ import { RolesModule } from './roles/roles.module';
     UserModule,
     LogsModule,
     RolesModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

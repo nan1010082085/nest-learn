@@ -4,6 +4,7 @@ import { Roles } from './entities/roles.entity';
 import { In, Repository } from 'typeorm';
 import { PaginationDto } from 'src/dto/pagination.dto';
 import { User } from 'src/user/entities/user.entity';
+import { log } from 'console';
 
 @Injectable()
 export class RolesService {
@@ -18,6 +19,11 @@ export class RolesService {
 
     const take = limit || 10;
     const skip = ((page || 1) - 1) * take;
+    // const [data, total] = await this.rolesRepository.findAndCount({
+    //   take: take,
+    //   skip: skip,
+    // });
+    // log(role);
 
     const data = await roleQueryBuilder.take(take).skip(skip).getMany();
     const total = await roleQueryBuilder.getCount();

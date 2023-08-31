@@ -17,7 +17,7 @@ import {
 import { User } from 'src/user/entities/user.entity';
 import * as Joi from 'joi';
 import { UserErrorMessage } from '../common/error/error-message';
-import { GetUserDto, validateQuery } from './dto/get-user.dto';
+import { QueryUserDto, validateQuery } from './dto/get-user.dto';
 import { TypeormFilter } from 'src/filter/typeorm.filter';
 import { log } from 'console';
 
@@ -31,7 +31,7 @@ export class UserController {
   ) {}
 
   @Get('all')
-  async getUserAll(@Query() query: GetUserDto) {
+  async getUserAll(@Query() query: QueryUserDto) {
     const schema = validateQuery(query);
     try {
       await schema.validateAsync(query);
