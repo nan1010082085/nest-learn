@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 import { PaginationDto } from 'src/dto/pagination.dto';
-import { transformPaginationDto } from 'src/utils/query.typorm';
+import { transformPaginationDto } from 'src/utils/vaildate-dto';
 
 export class GetUserDto extends PaginationDto {
   username?: string;

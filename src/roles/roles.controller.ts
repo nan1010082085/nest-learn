@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { PaginationDto } from 'src/dto/pagination.dto';
 import { HttpService } from 'src/common/http/http.service';
-import { transformPaginationDto } from 'src/utils/query.typorm';
+import { transformPaginationDto } from 'src/utils/vaildate-dto';
 
 @Controller('roles')
 export class RolesController {

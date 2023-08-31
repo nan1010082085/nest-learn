@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { GetUserDto } from './dto/get-user.dto';
-import { QueryBuilderTypeORM } from 'src/utils/query.typorm';
+import { QueryBuilderTypeORM } from 'src/utils/interaction.typorm';
 import { RolesService } from 'src/roles/roles.service';
 
 @Injectable()

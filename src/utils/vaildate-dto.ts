@@ -1,8 +1,13 @@
-// query builder typeorm
+/**
+ * @Author Yang (yang dong nan)
+ * @Date 2023年8月31日 10:47:29
+ * @LastEditorAuthors yangdongnan
+ * @LastDate 2023年8月31日 10:47:29
+ * @Description 验证传入数据
+ */
 
 import { BadRequestException } from '@nestjs/common';
 import { PaginationDto } from 'src/dto/pagination.dto';
-import { SelectQueryBuilder } from 'typeorm';
 
 export function transformPaginationDto<T extends PaginationDto>(query: T) {
   // 校验数字
@@ -18,19 +23,4 @@ export function transformPaginationDto<T extends PaginationDto>(query: T) {
   query.page = page;
   query.limit = limit;
   return query;
-}
-
-// 解析查询参数
-export class QueryBuilderTypeORM<T> {
-  constructor(public _queryBuilder: SelectQueryBuilder<T>) {}
-
-  whereBuilder(query: Record<string, unknown>) {
-    for (const key in query) {
-      const value = query[key];
-      if (value) {
-        this._queryBuilder.andWhere(`${key} = :${key}`, { [key]: value });
-      }
-    }
-    return this._queryBuilder;
-  }
 }
