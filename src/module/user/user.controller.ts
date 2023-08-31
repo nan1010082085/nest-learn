@@ -1,4 +1,3 @@
-import { HttpService } from './../common/http/http.service';
 import { UserService } from './user.service';
 import {
   Body,
@@ -14,12 +13,13 @@ import {
   NotFoundException,
   UseFilters,
 } from '@nestjs/common';
-import { User } from 'src/user/entities/user.entity';
 import * as Joi from 'joi';
-import { UserErrorMessage } from '../common/error/error-message';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
 import { TypeormFilter } from 'src/filter/typeorm.filter';
 import { log } from 'console';
+import { UserErrorMessage } from 'src/common/error/error-message';
+import { HttpService } from 'src/common/http/http.service';
+import { User } from './entities/user.entity';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())

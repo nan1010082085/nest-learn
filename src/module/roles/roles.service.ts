@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Roles } from './entities/roles.entity';
 import { In, Repository } from 'typeorm';
 import { PaginationDto } from 'src/dto/pagination.dto';
-import { User } from 'src/user/entities/user.entity';
-import { log } from 'console';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class RolesService {

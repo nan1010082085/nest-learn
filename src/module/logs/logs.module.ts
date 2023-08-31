@@ -10,7 +10,7 @@ import { utilities } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { ConfigLogEnum } from 'src/enum/db.enum';
-import { UserModule } from 'src/user/user.module';
+import { UserModule } from '../user/user.module';
 
 interface CreateDailyRotateFileOptions {
   dirname?: string;

@@ -9,9 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { UserProfile } from './user.profile.entity';
-import { Log } from 'src/logs/entities/log.entity';
-import { Roles } from 'src/roles/entities/roles.entity';
 import { log } from 'console';
+import { Log } from 'src/module/logs/entities/log.entity';
+import { Roles } from 'src/module/roles/entities/roles.entity';
 
 @Entity()
 export class User {
