@@ -14,6 +14,7 @@ import { CreateLogDto } from './dto/create-log.dto';
 import { HttpService } from 'src/common/http/http.service';
 import { Log } from './entities/log.entity';
 import { PaginationDto } from 'src/dto/pagination.dto';
+import { transformPaginationDto } from 'src/utils/vaildate-dto';
 
 @Controller('logs')
 export class LogsController {
@@ -42,9 +43,10 @@ export class LogsController {
   }
 
   @Get()
-  async findAll() {
-    const data = await this.logsService.findAll();
-    return this.httpService.result(HttpStatus.OK, '请求成功', data);
+  async findAll(@Query() query: PaginationDto) {
+    transformPaginationDto(query);
+    const { data, page } = await this.logsService.findAll(query);
+    return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }
 
   @Get('byUser/:userId')

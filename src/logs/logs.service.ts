@@ -19,8 +19,24 @@ export class LogsService {
     return this.logRepository.save(logs);
   }
 
-  findAll() {
-    return this.logRepository.find();
+  async findAll(_query: PaginationDto) {
+    const { limit, page } = _query;
+
+    const take = limit || 10;
+    const skip = ((page || 1) - 1) * take;
+
+    const [data, total] = await this.logRepository.findAndCount({
+      take,
+      skip,
+    });
+    return {
+      data,
+      page: {
+        page,
+        limit,
+        total,
+      },
+    };
   }
 
   findOne(id: string) {

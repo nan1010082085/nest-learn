@@ -3,7 +3,6 @@ import { LogsService } from './logs.service';
 import { LogsController } from './logs.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Log } from './entities/log.entity';
-import { User } from 'src/user/entities/user.entity';
 import { WinstonModule } from 'nest-winston';
 import { ConfigService } from '@nestjs/config';
 import { Console, DailyRotateFile } from 'winston/lib/winston/transports';
@@ -11,7 +10,6 @@ import { utilities } from 'nest-winston';
 import * as winston from 'winston';
 import 'winston-daily-rotate-file';
 import { ConfigLogEnum } from 'src/enum/db.enum';
-import { Roles } from 'src/roles/entities/roles.entity';
 import { UserModule } from 'src/user/user.module';
 
 interface CreateDailyRotateFileOptions {
@@ -55,7 +53,7 @@ function createDailyRotateFile(
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Log, User, Roles]),
+    TypeOrmModule.forFeature([Log]),
     WinstonModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
