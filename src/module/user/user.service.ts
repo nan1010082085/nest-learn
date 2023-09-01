@@ -62,12 +62,12 @@ export class UserService {
   async create(user: Partial<User>) {
     if (user.roles instanceof Array) {
       user.roles = await this.rolesService.findByRolesName(user);
-    }
-    const userTmp = this.userRepository.create(user);
-    try {
-      return await this.userRepository.save(userTmp);
-    } catch (err) {
-      throw err;
+      const userTmp = this.userRepository.create(user);
+      try {
+        return await this.userRepository.save(userTmp);
+      } catch (err) {
+        throw err;
+      }
     }
   }
 

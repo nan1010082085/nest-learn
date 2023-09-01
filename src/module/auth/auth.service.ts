@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { GetUserDto } from '../user/dto/get-user.dto';
 import { UserService } from '../user/user.service';
+import { CreateDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  login(dto: GetUserDto) {
+  login(dto: CreateDto) {
     const { username, password } = dto;
     return { username, password };
   }
