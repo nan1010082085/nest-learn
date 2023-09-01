@@ -1,14 +1,14 @@
 import { Global, Module } from '@nestjs/common';
-import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from './common/http/http.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import Configuration from './configuration';
-import { LogsModule } from './logs/logs.module';
 import { connectionParams } from 'ormconfig';
-import { RolesModule } from './roles/roles.module';
-import { AuthModule } from './auth/auth.module';
+import { UserModule } from './module/user/user.module';
+import { LogsModule } from './module/logs/logs.module';
+import { RolesModule } from './module/roles/roles.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Global()
 @Module({

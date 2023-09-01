@@ -14,7 +14,7 @@ import { CreateLogDto } from './dto/create-log.dto';
 import { HttpService } from 'src/common/http/http.service';
 import { Log } from './entities/log.entity';
 import { PaginationDto } from 'src/dto/pagination.dto';
-import { transformPaginationDto } from 'src/utils/vaildate-dto';
+import { PaginationPipe } from 'src/pipes/pagination.pipe';
 
 @Controller('logs')
 export class LogsController {
@@ -42,9 +42,9 @@ export class LogsController {
     return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
+  // PaginationPipe 校验传入的 pagination参数
   @Get()
-  async findAll(@Query() query: PaginationDto) {
-    transformPaginationDto(query);
+  async findAll(@Query(PaginationPipe) query: PaginationDto) {
     const { data, page } = await this.logsService.findAll(query);
     return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }

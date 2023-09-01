@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { PaginationDto } from 'src/dto/pagination.dto';
 import { HttpService } from 'src/common/http/http.service';
-import { transformPaginationDto } from 'src/utils/vaildate-dto';
+import { PaginationPipe } from 'src/pipes/pagination.pipe';
 
 @Controller('roles')
 export class RolesController {
@@ -12,8 +12,7 @@ export class RolesController {
   ) {}
 
   @Get()
-  async getRoles(@Query() query: PaginationDto) {
-    transformPaginationDto(query);
+  async getRoles(@Query(PaginationPipe) query: PaginationDto) {
     const { data, page } = await this.rolesService.findAll(query);
     return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }

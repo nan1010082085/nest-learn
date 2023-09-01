@@ -55,6 +55,8 @@ module.exports = {
     { value: 'user', name: 'user:          用户' },
     { value: 'role', name: 'role:          权限' },
     { value: 'log', name: 'log:           日志' },
+    { value: 'pipe', name: 'pipe:          管道' },
+    { value: 'guard', name: 'guard:         守卫' },
     { value: 'module', name: 'module:        模块' },
     { value: 'service', name: 'service:       服务' },
     { value: 'other', name: 'other:         其他' },

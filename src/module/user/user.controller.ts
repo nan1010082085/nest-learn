@@ -20,6 +20,7 @@ import { log } from 'console';
 import { UserErrorMessage } from 'src/common/error/error-message';
 import { HttpService } from 'src/common/http/http.service';
 import { User } from './entities/user.entity';
+import { PaginationPipe } from 'src/pipes/pagination.pipe';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())
@@ -31,8 +32,8 @@ export class UserController {
   ) {}
 
   @Get('all')
-  async getUserAll(@Query() query: QueryUserDto) {
-    const schema = validateQuery(query);
+  async getUserAll(@Query(PaginationPipe) query: QueryUserDto) {
+    const schema = validateQuery();
     try {
       await schema.validateAsync(query);
     } catch (err) {
@@ -57,7 +58,7 @@ export class UserController {
   }
 
   @Post('create')
-  async createUser(@Body() user: any) {
+  async createUser(@Body() user: User) {
     // Joi校验数据完整性
     const schema = Joi.object({
       username: Joi.string().empty().required(),
@@ -73,7 +74,7 @@ export class UserController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-    const result = await this.userService.add(user);
+    const result = await this.userService.create(user);
     let data = null;
     if (result.id) data = result.id;
     return this.httpService.result(HttpStatus.OK, '操作成功', data);
