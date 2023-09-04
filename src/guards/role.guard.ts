@@ -14,7 +14,6 @@ export class RoleGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const className = context.getClass().name;
     const handlerName = context.getHandler().name;
-    log(handlerName, className);
     // 不验证的控制器路由
     if (notValidateByRole(className, handlerName)) {
       return true;

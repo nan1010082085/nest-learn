@@ -5,6 +5,8 @@ import { QueryUserDto } from './dto/get-user.dto';
 import { QueryBuilderTypeORM } from '../../utils/interaction.typorm';
 import { RolesService } from '../roles/roles.service';
 import { User } from './entities/user.entity';
+import { CreateDto } from './dto/create-user.dto';
+import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -62,19 +64,25 @@ export class UserService {
   findOne(id: string) {
     return this.userRepository
       .createQueryBuilder('user')
+      .leftJoinAndSelect('user.profile', 'profile')
+      .leftJoinAndSelect('user.roles', 'roles')
       .where('user.id = :id', { id })
       .getOne();
   }
 
-  async create(user: Partial<User>) {
-    if (user.roles instanceof Array) {
-      user.roles = await this.rolesService.findByRolesName(user);
-      const userTmp = this.userRepository.create(user);
-      try {
-        return await this.userRepository.save(userTmp);
-      } catch (err) {
-        throw err;
+  async create(user: CreateDto) {
+    if (user.roles && user.roles instanceof Array) {
+      if (user.roles[0]['name']) {
+        user.roles = await this.rolesService.findByRolesName(user as User);
+      } else {
+        user.roles = await this.rolesService.findByRolesId(user as User);
       }
+    }
+    const userTmp = this.userRepository.create(user as User);
+    try {
+      return await this.userRepository.save(userTmp);
+    } catch (err) {
+      throw err;
     }
   }
 

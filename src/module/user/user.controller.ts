@@ -14,7 +14,6 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import * as Joi from 'joi';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
 import { log } from 'console';
 import { TypeormFilter } from '../../filter/typeorm.filter';
@@ -25,6 +24,7 @@ import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { UserGuard } from '../../guards/user.guard';
 import { RoleGuard } from 'src/guards/role.guard';
 import { RoleValidator } from 'src/decorator/role-validator.decorator';
+import { CreateDto } from './dto/create-user.dto';
 
 @Controller('user')
 @RoleValidator(6)
@@ -49,14 +49,18 @@ export class UserController {
     return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }
 
+  @UseGuards(UserGuard)
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     const data = await this.userService.findOne(id);
     let res = null;
+    const { username, profile, roles } = data;
     if (data) {
       res = {
         id: data.id,
-        name: data.username,
+        name: username,
+        profile,
+        roles,
       };
       return this.httpService.result(HttpStatus.OK, '请求成功', res);
     }
@@ -64,22 +68,7 @@ export class UserController {
   }
 
   @Post('create')
-  async createUser(@Body() user: User) {
-    // Joi校验数据完整性
-    const schema = Joi.object({
-      username: Joi.string().empty().required(),
-      password: Joi.string().empty().alphanum().min(6).required(),
-      profile: Joi.any(),
-      roles: Joi.any(),
-    });
-    try {
-      await schema.validateAsync(user);
-    } catch (err) {
-      throw new HttpException(
-        this.message.text(err),
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async createUser(@Body() user: CreateDto) {
     const result = await this.userService.create(user);
     let data = null;
     if (result.id) data = result.id;

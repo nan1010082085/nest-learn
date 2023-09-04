@@ -37,7 +37,15 @@ export class RolesService {
     };
   }
 
-  findByRolesName(user: Partial<User>) {
+  findByRolesId(user: User) {
+    return this.rolesRepository.find({
+      where: {
+        id: In(user.roles),
+      },
+    });
+  }
+
+  findByRolesName(user: User) {
     return this.rolesRepository.find({
       where: {
         name: In(user.roles),
