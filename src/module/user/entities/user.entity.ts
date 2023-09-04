@@ -10,8 +10,8 @@ import {
 } from 'typeorm';
 import { UserProfile } from './user.profile.entity';
 import { log } from 'console';
-import { Log } from 'src/module/logs/entities/log.entity';
-import { Roles } from 'src/module/roles/entities/roles.entity';
+import { Log } from '../../logs/entities/log.entity';
+import { Roles } from '../../roles/entities/roles.entity';
 
 @Entity()
 export class User {

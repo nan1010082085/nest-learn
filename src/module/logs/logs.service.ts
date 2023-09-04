@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Log } from './entities/log.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { PaginationDto } from '../../dto/pagination.dto';
 import { UserService } from '../user/user.service';
 
 @Injectable()

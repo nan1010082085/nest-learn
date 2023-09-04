@@ -1,8 +1,8 @@
 import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { PaginationDto } from 'src/dto/pagination.dto';
-import { HttpService } from 'src/common/http/http.service';
-import { PaginationPipe } from 'src/pipes/pagination.pipe';
+import { PaginationDto } from '../../dto/pagination.dto';
+import { HttpService } from '../../common/http/http.service';
+import { PaginationPipe } from '../../pipes/pagination.pipe';
 
 @Controller('roles')
 export class RolesController {

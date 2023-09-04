@@ -3,14 +3,13 @@
  * @Date 2023年9月4日 13:35:18
  * @LastEditorAuthors yangdongnan
  * @LastDate 2023年9月4日 13:35:18
- * @Description 扩展jwt AuthGuard守卫
+ * @Description 扩展jwt AuthGuard 守卫
  */
 
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { log } from 'console';
-import { DecoratorEnum } from 'src/enum/decorator.enum';
+import { DecoratorEnum } from '../../enum/decorator.enum';
 
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {

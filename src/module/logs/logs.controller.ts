@@ -8,14 +8,16 @@ import {
   Req,
   Query,
   HttpException,
+  UseGuards,
 } from '@nestjs/common';
 import { LogsService } from './logs.service';
 import { CreateLogDto } from './dto/create-log.dto';
-import { HttpService } from 'src/common/http/http.service';
 import { Log } from './entities/log.entity';
-import { PaginationDto } from 'src/dto/pagination.dto';
-import { PaginationPipe } from 'src/pipes/pagination.pipe';
-import { PublicRoute } from 'src/decorator/public/public-route.decorator';
+import { HttpService } from '../../common/http/http.service';
+import { PaginationDto } from '../../dto/pagination.dto';
+import { PaginationPipe } from '../../pipes/pagination.pipe';
+import { RoleGuard } from '../../guards/role.guard';
+import { RoleValidator } from '../../decorator/role-validator.decorator';
 
 @Controller('logs')
 export class LogsController {
@@ -43,7 +45,8 @@ export class LogsController {
     return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
-  @PublicRoute()
+  @RoleValidator(5)
+  @UseGuards(RoleGuard)
   @Get()
   // PaginationPipe 校验传入的 pagination参数
   async findAll(@Query(PaginationPipe) query: PaginationDto) {

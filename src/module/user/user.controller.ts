@@ -12,15 +12,17 @@ import {
   Query,
   NotFoundException,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 import * as Joi from 'joi';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
-import { TypeormFilter } from 'src/filter/typeorm.filter';
 import { log } from 'console';
-import { UserErrorMessage } from 'src/common/error/error-message';
-import { HttpService } from 'src/common/http/http.service';
+import { TypeormFilter } from '../../filter/typeorm.filter';
+import { UserErrorMessage } from '../../common/error/error-message';
+import { HttpService } from '../../common/http/http.service';
 import { User } from './entities/user.entity';
-import { PaginationPipe } from 'src/pipes/pagination.pipe';
+import { PaginationPipe } from '../../pipes/pagination.pipe';
+import { UserGuard } from '../../guards/user.guard';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())
@@ -80,6 +82,7 @@ export class UserController {
     return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
+  @UseGuards(UserGuard)
   @Put('update/:id')
   async updateUser(@Param('id') id: string, @Body() dto: User) {
     try {

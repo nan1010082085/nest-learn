@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { QueryUserDto } from './dto/get-user.dto';
-import { QueryBuilderTypeORM } from 'src/utils/interaction.typorm';
+import { QueryBuilderTypeORM } from '../../utils/interaction.typorm';
 import { RolesService } from '../roles/roles.service';
 import { User } from './entities/user.entity';
 
@@ -48,12 +48,15 @@ export class UserService {
     };
   }
 
-  find(username: string) {
+  findOneByUsername(username: string) {
     return this.userRepository.findOne({ where: { username } });
   }
 
-  findOneByUsername(username: string) {
-    return this.userRepository.findOne({ where: { username } });
+  findOneRoleOfUser(id: string) {
+    return this.userRepository.findOne({
+      where: { id },
+      relations: { roles: true },
+    });
   }
 
   findOne(id: string) {
