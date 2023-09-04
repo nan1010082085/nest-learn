@@ -6,8 +6,8 @@ import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigJwtEnum } from 'src/enum/db.enum';
-import { log } from 'console';
 import { JwtStrategy } from '../logs/jwt.strategy';
+import { JwtAuthGuard } from './jwt.auth.guard';
 
 @Module({
   imports: [
@@ -17,7 +17,6 @@ import { JwtStrategy } from '../logs/jwt.strategy';
       inject: [ConfigService],
       useFactory: (configService) => {
         const cJwt = configService.get('jwt');
-        log('jwt secret', cJwt[ConfigJwtEnum.SECRET]);
         return {
           secret: cJwt[ConfigJwtEnum.SECRET],
           signOptions: {
@@ -28,6 +27,14 @@ import { JwtStrategy } from '../logs/jwt.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    // 在任意模块中使用下列KEY都可以注册全局守卫
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtAuthGuard,
+    },
+  ],
 })
 export class AuthModule {}

@@ -9,6 +9,7 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
+import { log } from 'console';
 import { DecoratorEnum } from 'src/enum/decorator.enum';
 
 @Injectable()
@@ -21,7 +22,12 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     // this.reflector 获取指定key的元数据
     const isPublicRoute = this.reflector.getAllAndOverride(
       DecoratorEnum.IS_PUBLIC_ROUTE,
-      [context.getHandler(), context.getClass()],
+      [
+        // 路由名
+        context.getHandler(),
+        // 模块名
+        context.getClass(),
+      ],
     );
 
     if (isPublicRoute) {

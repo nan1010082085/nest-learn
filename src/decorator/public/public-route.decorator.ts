@@ -9,5 +9,6 @@
 import { SetMetadata } from '@nestjs/common';
 import { DecoratorEnum } from 'src/enum/decorator.enum';
 
-export const PublicRoute = (...args: string[]) =>
-  SetMetadata(DecoratorEnum.IS_PUBLIC_ROUTE, args);
+export const PublicRoute = (...args: string[]) => {
+  return SetMetadata(DecoratorEnum.IS_PUBLIC_ROUTE, args);
+};
