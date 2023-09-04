@@ -23,8 +23,12 @@ import { HttpService } from '../../common/http/http.service';
 import { User } from './entities/user.entity';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { UserGuard } from '../../guards/user.guard';
+import { RoleGuard } from 'src/guards/role.guard';
+import { RoleValidator } from 'src/decorator/role-validator.decorator';
 
 @Controller('user')
+@RoleValidator(6)
+@UseGuards(RoleGuard)
 @UseFilters(new TypeormFilter())
 export class UserController {
   private message = new UserErrorMessage('user');

@@ -18,7 +18,10 @@ import { PaginationDto } from '../../dto/pagination.dto';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { RoleGuard } from '../../guards/role.guard';
 import { RoleValidator } from '../../decorator/role-validator.decorator';
+import { JwtRequest } from '../../interface';
 
+@RoleValidator(5)
+@UseGuards(RoleGuard)
 @Controller('logs')
 export class LogsController {
   constructor(
@@ -28,8 +31,7 @@ export class LogsController {
 
   @Post(':id')
   async create(
-    @Req() request: Request,
-    @Param('id') userId: string,
+    @Req() request: Request & JwtRequest,
     @Body() createLogDto: CreateLogDto,
   ) {
     const path = request.url;
@@ -41,12 +43,11 @@ export class LogsController {
       },
       createLogDto,
     );
-    const data = await this.logsService.create(userId, logSchema);
-    return this.httpService.result(HttpStatus.OK, '操作成功', data);
+    const userId = request.user.userId;
+    await this.logsService.create(userId, logSchema);
+    return this.httpService.result(HttpStatus.OK, '操作成功');
   }
 
-  @RoleValidator(5)
-  @UseGuards(RoleGuard)
   @Get()
   // PaginationPipe 校验传入的 pagination参数
   async findAll(@Query(PaginationPipe) query: PaginationDto) {

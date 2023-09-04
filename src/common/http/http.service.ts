@@ -1,5 +1,5 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { httpResolveResult } from 'src/interface/http.interface';
+import { httpResolveResult } from '../../interface/http.interface';
 
 @Injectable()
 export class HttpService {

@@ -7,7 +7,7 @@
  */
 
 import { Injectable, PipeTransform } from '@nestjs/common';
-import { transformPaginationDto } from 'src/utils/vaildate-dto';
+import { transformPaginationDto } from '../utils/vaildate-dto';
 
 @Injectable()
 export class PaginationPipe implements PipeTransform {

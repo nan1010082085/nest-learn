@@ -1,8 +1,9 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { log } from 'console';
 import { DecoratorEnum } from '../enum/decorator.enum';
 import { UserService } from '../module/user/user.service';
+import { notValidateByRole } from '../utils/rules';
+import { log } from 'console';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -11,13 +12,22 @@ export class RoleGuard implements CanActivate {
     private reflector: Reflector,
   ) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    // 获取controller，路由元数据局@SetMetadata
-    const roles = this.reflector.getAllAndOverride(
-      DecoratorEnum.ROLE_VALIDATOR,
-      [context.getHandler()],
-    ) as number[];
+    const className = context.getClass().name;
+    const handlerName = context.getHandler().name;
+    log(handlerName, className);
+    // 不验证的控制器路由
+    if (notValidateByRole(className, handlerName)) {
+      return true;
+    }
 
-    log(roles);
+    // 获取controller，路由元数据局@SetMetadata
+    const roles =
+      (this.reflector.getAllAndOverride(DecoratorEnum.ROLE_VALIDATOR, [
+        // 路由级别
+        context.getHandler(),
+        // 控制器级别
+        context.getClass(),
+      ]) as number[]) || [];
 
     const req = context.switchToHttp().getRequest();
     if (req.user) {

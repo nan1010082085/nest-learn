@@ -9,8 +9,9 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
-import { DecoratorEnum } from '../../enum/decorator.enum';
+import { DecoratorEnum } from '../enum/decorator.enum';
 
+// 要使用nestjs的DI系统类，就需要Injectable注解标记
 @Injectable()
 export class JwtAuthGuard extends AuthGuard('jwt') {
   constructor(private reflector: Reflector) {

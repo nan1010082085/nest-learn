@@ -4,11 +4,12 @@ import { HttpModule } from './common/http/http.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import Configuration from './configuration';
-import { connectionParams } from 'ormconfig';
+import { connectionParams } from '../ormconfig';
 import { UserModule } from './module/user/user.module';
 import { LogsModule } from './module/logs/logs.module';
 import { RolesModule } from './module/roles/roles.module';
 import { AuthModule } from './module/auth/auth.module';
+import { JwtAuthGuard } from './guards/jwt.guard';
 
 @Global()
 @Module({
@@ -40,7 +41,13 @@ import { AuthModule } from './module/auth/auth.module';
     AuthModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    // 在任意模块中使用下列KEY都可以注册全局守卫
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtAuthGuard,
+    },
+  ],
   exports: [],
 })
 export class AppModule {}

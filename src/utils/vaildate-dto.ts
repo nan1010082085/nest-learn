@@ -7,7 +7,7 @@
  */
 
 import { BadRequestException } from '@nestjs/common';
-import { PaginationDto } from 'src/dto/pagination.dto';
+import { PaginationDto } from '../dto/pagination.dto';
 
 export function transformPaginationDto<T extends PaginationDto>(query: T) {
   // 校验数字
