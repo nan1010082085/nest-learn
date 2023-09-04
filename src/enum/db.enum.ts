@@ -12,3 +12,7 @@ export enum ConfigLogEnum {
   PATH = 'PATH',
   ON = 'ON',
 }
+
+export enum ConfigJwtEnum {
+  SECRET = 'SECRET',
+}

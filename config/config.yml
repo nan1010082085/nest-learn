@@ -1,4 +1,4 @@
-type: 'default'
+type: default
 db:
   DB_TYPE: mysql
   DB_HOST: 127.0.0.1
@@ -10,4 +10,6 @@ db:
 log:
   PATH: logs
   ON: false
-  LEVEL: 'info'
+  LEVEL: info
+jwt:
+  SECRET: CX4nojjoJpuosqgezsUWuXTWFJttjS3CPJsPWsmPk57CU6M57S11YeoVeEnWruTd

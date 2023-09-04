@@ -41,6 +41,9 @@ dependencies:
   cross-env:
     specifier: ^7.0.3
     version: 7.0.3
+  cryptojs:
+    specifier: ^2.5.3
+    version: 2.5.3
   dotenv:
     specifier: ^16.3.1
     version: 16.3.1
@@ -2519,6 +2522,10 @@ packages:
       path-key: 3.1.1
       shebang-command: 2.0.0
       which: 2.0.2
+
+  /cryptojs@2.5.3:
+    resolution: {integrity: sha512-+rdPl1UCxE8s3R94NNn+zMKOiI4MJ7dyh3X0c5uBL3btDr4zQ6acd7f9mY7Wb5MrccZEi2Rrha3OEtLcc5XXog==}
+    dev: false
 
   /cz-conventional-changelog@3.3.0:
     resolution: {integrity: sha512-U466fIzU5U22eES5lTNiNbZ+d8dfcHcssH4o7QsdWaCcRs/feIPCxKYSWkYBNs5mny7MvEfwpTLWjvbm94hecw==}

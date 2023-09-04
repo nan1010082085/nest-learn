@@ -52,6 +52,10 @@ export class UserService {
     return this.userRepository.findOne({ where: { username } });
   }
 
+  findOneByUsername(username: string) {
+    return this.userRepository.findOne({ where: { username } });
+  }
+
   findOne(id: string) {
     return this.userRepository
       .createQueryBuilder('user')
@@ -114,7 +118,7 @@ export class UserService {
       .leftJoinAndSelect('user.logs', 'logs')
       .select('user.id', 'id')
       .addSelect('user.username', 'name')
-      .addSelect('profile.gender', 'gender')
+      .addSelect('profile.ganger', 'ganger')
       .addSelect('profile.photo', 'photo')
       .addSelect('profile.address', 'address')
       .addSelect('COUNT("user.logs")', 'logs_count')

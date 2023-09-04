@@ -1,6 +1,5 @@
-import { Body, Controller, Get, Post, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateDto } from '../user/dto/create-user.dto';
 import { log } from 'console';
 
 @Controller('auth')
@@ -13,13 +12,15 @@ export class AuthController {
   }
 
   @Post('login')
-  login(@Body(new ValidationPipe()) dto: CreateDto) {
-    log(dto);
-    return this.authService.login(dto);
+  login(@Body() dto) {
+    log('auth login', dto);
+    const { username, password } = dto;
+    return this.authService.login(username, password);
   }
 
   @Post('logout')
-  logout(@Body() dto: any) {
+  logout(@Body() dto: any, @Headers() headers) {
+    log(headers);
     return this.authService.logout(dto);
   }
 }

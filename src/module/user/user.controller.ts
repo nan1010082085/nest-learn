@@ -12,6 +12,7 @@ import {
   Query,
   NotFoundException,
   UseFilters,
+  UseGuards,
 } from '@nestjs/common';
 import * as Joi from 'joi';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
@@ -21,6 +22,7 @@ import { UserErrorMessage } from 'src/common/error/error-message';
 import { HttpService } from 'src/common/http/http.service';
 import { User } from './entities/user.entity';
 import { PaginationPipe } from 'src/pipes/pagination.pipe';
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 
 @Controller('user')
 @UseFilters(new TypeormFilter())
@@ -101,6 +103,7 @@ export class UserController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('profile/:id')
   async findUserProfile(@Param('id') id: string) {
     if (id) {
