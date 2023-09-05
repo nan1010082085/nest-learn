@@ -1,8 +1,5 @@
 import * as Joi from 'joi';
 import { PaginationDto } from '../../../dto/pagination.dto';
-import { UpdateDto } from './update-user.dto';
-
-export class GetUserDto extends UpdateDto {}
 
 export class QueryUserDto extends PaginationDto {
   username?: string;

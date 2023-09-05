@@ -97,12 +97,12 @@ export class UserService {
       throw new Error('无法更新相关profile字段');
     }
     const newUser = this.userRepository.merge(userTmp, dto);
-    if (dto.roles instanceof Array) {
+    if (dto.roles && dto.roles instanceof Array) {
       const roles = await this.rolesService.findByRolesName(dto);
       newUser.roles = roles;
     }
     // 更新新的关系实体
-    return this.userRepository.save(newUser);
+    // return this.userRepository.save(newUser);
     // 只使用对单个实体进行更新操作
     // return this.userRepository.update(id, user);
   }

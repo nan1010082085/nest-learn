@@ -21,5 +21,6 @@ export class UserDto {
   profile: UserProfile;
 
   @Transform(({ value }) => value.map((v: RoleDto) => v.id))
+  @Expose()
   roles: string[];
 }

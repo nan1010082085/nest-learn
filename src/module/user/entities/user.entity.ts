@@ -27,7 +27,7 @@ export class User {
   @OneToOne(() => UserProfile, (userProfile) => userProfile.user, {
     cascade: true,
   })
-  profile: UserProfile;
+  profile?: UserProfile;
 
   @OneToMany(() => Log, (log) => log.user, { cascade: true })
   logs: Log[];
@@ -36,7 +36,7 @@ export class User {
     cascade: ['insert'],
   })
   @JoinTable({ name: 'user_roles' })
-  roles: Roles[];
+  roles?: Roles[];
 
   @AfterRemove()
   afterRemoveUser() {

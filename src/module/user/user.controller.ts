@@ -15,18 +15,17 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
-import { log } from 'console';
 import { TypeormFilter } from '../../filter/typeorm.filter';
 import { HttpService } from '../../common/http/http.service';
-import { User } from './entities/user.entity';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { UserGuard } from '../../guards/user.guard';
-import { RoleGuard } from 'src/guards/role.guard';
-import { RoleValidator } from 'src/decorator/role-validator.decorator';
-import { CreateDto } from './dto/create-user.dto';
-import { PublicRoute } from 'src/decorator/public-route.decorator';
+import { RoleGuard } from './../../guards/role.guard';
+import { RoleValidator } from './../../decorator/role-validator.decorator';
+import { PublicRoute } from './../../decorator/public-route.decorator';
+import { Serialize } from './../../decorator/serialize.decorator';
 import { UserDto } from './dto/user.dto';
-import { Serialize } from 'src/decorator/serialize.decorator';
+import { CreateDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
 @RoleValidator(6)
@@ -73,10 +72,9 @@ export class UserController {
 
   @UseGuards(UserGuard)
   @Put('update/:id')
-  async updateUser(@Param('id') id: string, @Body() dto: User) {
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     try {
-      const result = await this.userService.update(id, dto);
-      log(result);
+      await this.userService.update(id, dto);
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
