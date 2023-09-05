@@ -6,6 +6,7 @@ import { QueryBuilderTypeORM } from '../../utils/interaction.typorm';
 import { RolesService } from '../roles/roles.service';
 import { User } from './entities/user.entity';
 import { CreateDto } from './dto/create-user.dto';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UserService {
@@ -66,7 +67,7 @@ export class UserService {
       .leftJoinAndSelect('user.profile', 'profile')
       .leftJoinAndSelect('user.roles', 'roles')
       .where('user.id = :id', { id })
-      .getRawOne();
+      .getOne();
     // log(data);
     return data;
   }
@@ -79,6 +80,9 @@ export class UserService {
         user.roles = await this.rolesService.findByRolesId(user as User);
       }
     }
+    // 加密密码
+    user.password = await argon2.hash(user.password);
+
     const userTmp = this.userRepository.create(user as User);
     try {
       return await this.userRepository.save(userTmp);

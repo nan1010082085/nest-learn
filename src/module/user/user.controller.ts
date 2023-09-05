@@ -13,7 +13,6 @@ import {
   NotFoundException,
   UseFilters,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
 import { log } from 'console';
@@ -25,7 +24,9 @@ import { UserGuard } from '../../guards/user.guard';
 import { RoleGuard } from 'src/guards/role.guard';
 import { RoleValidator } from 'src/decorator/role-validator.decorator';
 import { CreateDto } from './dto/create-user.dto';
-import { FindOneInterceptor } from 'src/interceptor/find-one.interceptor';
+import { PublicRoute } from 'src/decorator/public-route.decorator';
+import { UserDto } from './dto/user.dto';
+import { Serialize } from 'src/decorator/serialize.decorator';
 
 @Controller('user')
 @RoleValidator(6)
@@ -49,9 +50,7 @@ export class UserController {
     return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }
 
-  @UseInterceptors(
-    new FindOneInterceptor(['profile', 'roles'], ['password', 'userId']),
-  )
+  @Serialize(UserDto)
   @UseGuards(UserGuard)
   @Get(':id')
   async getUserById(@Param('id') id: string) {
@@ -62,6 +61,8 @@ export class UserController {
     throw new NotFoundException('未找到对应数据');
   }
 
+  // 允许任何非用户创建用户
+  @PublicRoute()
   @Post('create')
   async createUser(@Body() user: CreateDto) {
     const result = await this.userService.create(user);

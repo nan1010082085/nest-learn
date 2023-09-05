@@ -20,7 +20,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
   canActivate(context: ExecutionContext): any {
     // this.reflector 获取指定key的元数据
-    const isPublicRoute = this.reflector.getAllAndOverride(
+    const isPublic = this.reflector.getAllAndOverride(
       DecoratorEnum.IS_PUBLIC_ROUTE,
       [
         // 路由名
@@ -30,7 +30,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       ],
     );
 
-    if (isPublicRoute) {
+    if (isPublic) {
       return true;
     }
 

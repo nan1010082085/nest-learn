@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { log } from 'console';
+import { PublicRoute } from 'src/decorator/public-route.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -11,8 +12,9 @@ export class AuthController {
     return 'test auth api successful';
   }
 
+  @PublicRoute()
   @Post('login')
-  login(@Body() dto) {
+  login(@Body() dto: any) {
     log('auth login', dto);
     const { username, password } = dto;
     return this.authService.login(username, password);

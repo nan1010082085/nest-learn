@@ -18,6 +18,17 @@ export class RoleGuard implements CanActivate {
       return true;
     }
 
+    const isPublic = this.reflector.getAllAndOverride(
+      DecoratorEnum.IS_PUBLIC_ROUTE,
+      [
+        // 路由名
+        context.getHandler(),
+        // 模块名
+        context.getClass(),
+      ],
+    );
+    if (isPublic) return true;
+
     // 获取controller，路由元数据局@SetMetadata
     const roles =
       (this.reflector.getAllAndOverride(DecoratorEnum.ROLE_VALIDATOR, [

@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MinLength } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, IsArray } from 'class-validator';
 import { Roles } from 'src/module/roles/entities/roles.entity';
 export class CreateDto {
   @IsString()
@@ -14,5 +14,7 @@ export class CreateDto {
     message: '密码长度最小$constraint1',
   })
   password: string;
+
+  @IsArray()
   roles?: number[] | Array<Partial<Roles>>;
 }

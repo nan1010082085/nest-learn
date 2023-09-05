@@ -2,6 +2,7 @@
  * Record<ClassName, string[]>
  */
 const controllerArr = {
+  AuthController: ['login'],
   // 任意用户都可以创建日志
   LogsController: ['create'],
   // 对用户自己更新信息不进行校验

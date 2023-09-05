@@ -1,3 +1,11 @@
+/**
+ * @Author Yang (yang dong nan)
+ * @Date 2023年9月5日 16:00:19
+ * @LastEditorAuthors yangdongnan
+ * @LastDate 2023年9月5日 16:00:19
+ * @Description 转换getRaw返回的原始数据
+ */
+
 import {
   CallHandler,
   ExecutionContext,
@@ -9,7 +17,7 @@ import { omit } from 'lodash';
 import { Observable, map } from 'rxjs';
 
 @Injectable()
-export class FindOneInterceptor implements NestInterceptor {
+export class SerializeRawInterceptor implements NestInterceptor {
   /**
    * 拦截响应原始数据的返回值
    * @param names 被过滤_id的属性名， 会自动`${name}_id`拼接
