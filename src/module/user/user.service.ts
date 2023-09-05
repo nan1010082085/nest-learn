@@ -6,7 +6,6 @@ import { QueryBuilderTypeORM } from '../../utils/interaction.typorm';
 import { RolesService } from '../roles/roles.service';
 import { User } from './entities/user.entity';
 import { CreateDto } from './dto/create-user.dto';
-import { log } from 'console';
 
 @Injectable()
 export class UserService {
@@ -61,13 +60,15 @@ export class UserService {
     });
   }
 
-  findOne(id: string) {
-    return this.userRepository
+  async findOne(id: string) {
+    const data = await this.userRepository
       .createQueryBuilder('user')
       .leftJoinAndSelect('user.profile', 'profile')
       .leftJoinAndSelect('user.roles', 'roles')
       .where('user.id = :id', { id })
-      .getOne();
+      .getRawOne();
+    // log(data);
+    return data;
   }
 
   async create(user: CreateDto) {

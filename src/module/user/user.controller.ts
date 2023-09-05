@@ -13,11 +13,11 @@ import {
   NotFoundException,
   UseFilters,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { QueryUserDto, validateQuery } from './dto/get-user.dto';
 import { log } from 'console';
 import { TypeormFilter } from '../../filter/typeorm.filter';
-import { UserErrorMessage } from '../../common/error/error-message';
 import { HttpService } from '../../common/http/http.service';
 import { User } from './entities/user.entity';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
@@ -25,13 +25,13 @@ import { UserGuard } from '../../guards/user.guard';
 import { RoleGuard } from 'src/guards/role.guard';
 import { RoleValidator } from 'src/decorator/role-validator.decorator';
 import { CreateDto } from './dto/create-user.dto';
+import { FindOneInterceptor } from 'src/interceptor/find-one.interceptor';
 
 @Controller('user')
 @RoleValidator(6)
 @UseGuards(RoleGuard)
 @UseFilters(new TypeormFilter())
 export class UserController {
-  private message = new UserErrorMessage('user');
   constructor(
     private readonly httpService: HttpService,
     private readonly userService: UserService,
@@ -49,20 +49,15 @@ export class UserController {
     return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }
 
+  @UseInterceptors(
+    new FindOneInterceptor(['profile', 'roles'], ['password', 'userId']),
+  )
   @UseGuards(UserGuard)
   @Get(':id')
   async getUserById(@Param('id') id: string) {
     const data = await this.userService.findOne(id);
-    let res = null;
-    const { username, profile, roles } = data;
     if (data) {
-      res = {
-        id: data.id,
-        name: username,
-        profile,
-        roles,
-      };
-      return this.httpService.result(HttpStatus.OK, '请求成功', res);
+      return this.httpService.result(HttpStatus.OK, '请求成功', data);
     }
     throw new NotFoundException('未找到对应数据');
   }
@@ -90,8 +85,8 @@ export class UserController {
   @Delete('delete')
   async deleteUser(@Query('id') id: string) {
     try {
-      const user = await this.userService.remove(id);
-      return this.httpService.result(HttpStatus.OK, '操作成功', user.id);
+      await this.userService.remove(id);
+      return this.httpService.result(HttpStatus.OK, '操作成功');
     } catch (err) {
       throw new HttpException(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }

@@ -3,7 +3,6 @@ import { Reflector } from '@nestjs/core';
 import { DecoratorEnum } from '../enum/decorator.enum';
 import { UserService } from '../module/user/user.service';
 import { notValidateByRole } from '../utils/rules';
-import { log } from 'console';
 
 @Injectable()
 export class RoleGuard implements CanActivate {

@@ -1,5 +1,3 @@
-import { log } from "console";
-
 /**
  * Record<ClassName, string[]>
  */
