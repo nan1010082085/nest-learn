@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    log('jwt strategy = ', payload);
+    // log('jwt strategy = ', payload);
     // const user = this.authService.validatorUser(payload);
     // log('validate', user);
     // if (!user) {

@@ -37,6 +37,7 @@ export class UserController {
     private readonly userService: UserService,
   ) {}
 
+  // params by pipe PaginationPipe 转换输入分页参数 String to Number
   @Get('all')
   async getUserAll(@Query(PaginationPipe) query: QueryUserDto) {
     const schema = validateQuery();
@@ -49,6 +50,8 @@ export class UserController {
     return this.httpService.result(HttpStatus.OK, '请求成功', data, page);
   }
 
+  // Interceptor 转换响应 Dto 通过 plainToInstance form class-transformer
+  // Guard 验证用户是否是自己
   @Serialize(UserDto)
   @UseGuards(UserGuard)
   @Get(':id')
@@ -70,6 +73,8 @@ export class UserController {
     return this.httpService.result(HttpStatus.OK, '操作成功', data);
   }
 
+  // Guard 校验用户是否是自己
+  // Dto 输入校验指定字段传输
   @UseGuards(UserGuard)
   @Put('update/:id')
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {

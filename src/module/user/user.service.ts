@@ -73,6 +73,9 @@ export class UserService {
   }
 
   async create(user: CreateDto) {
+    // 未传递用户角色
+    if (!user.roles) user.roles = [3];
+    // 传入角色格式
     if (user.roles && user.roles instanceof Array) {
       if (user.roles[0]['name']) {
         user.roles = await this.rolesService.findByRolesName(user as User);
@@ -80,6 +83,7 @@ export class UserService {
         user.roles = await this.rolesService.findByRolesId(user as User);
       }
     }
+
     // 加密密码
     user.password = await argon2.hash(user.password);
 
@@ -102,7 +106,7 @@ export class UserService {
       newUser.roles = roles;
     }
     // 更新新的关系实体
-    // return this.userRepository.save(newUser);
+    return this.userRepository.save(newUser);
     // 只使用对单个实体进行更新操作
     // return this.userRepository.update(id, user);
   }

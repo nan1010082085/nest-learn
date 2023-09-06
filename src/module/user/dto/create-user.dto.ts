@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MinLength, IsArray } from 'class-validator';
+import { IsString, IsNotEmpty, MinLength, Allow } from 'class-validator';
 import { Roles } from 'src/module/roles/entities/roles.entity';
 export class CreateDto {
   @IsString()
@@ -15,6 +15,6 @@ export class CreateDto {
   })
   password: string;
 
-  @IsArray()
+  @Allow()
   roles?: number[] | Array<Partial<Roles>>;
 }

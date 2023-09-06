@@ -33,12 +33,10 @@ export class SerializeInterceptor<T extends ClassConstructor<unknown>>
       map((res) => {
         // res.data = this.transform(res.data);
         const { code, message } = res;
-        log(res.data);
         const data = plainToInstance(this.dto, res.data, {
           // 只返回expose暴露的字段
           // excludeExtraneousValues: true,
         });
-        log('data', data);
         return {
           code,
           message,
