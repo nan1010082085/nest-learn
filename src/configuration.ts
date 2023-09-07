@@ -8,22 +8,31 @@ import { log } from 'console';
 const DEFAULT_CONFIG = 'config.yml';
 const DEVELOPMENT_CONFIG = 'config.development.yml';
 const PRODUCTION_CONFIG = 'config.production.yml';
+const ENV = process.env.NODE_ENV === 'development';
+const CURRENT = ENV ? DEVELOPMENT_CONFIG : PRODUCTION_CONFIG;
 
-const ENV = process.env.NODE_ENV;
-const CURRENT = ENV === 'development' ? DEVELOPMENT_CONFIG : PRODUCTION_CONFIG;
-
-const paramConfigByYml = (yml: string): ConfigObject => {
-  const dir = join(__dirname, './config', yml);
-  if (existsSync(dir)) {
-    const ymlFIle = readFileSync(dir, 'utf8');
-    return yaml.load(ymlFIle);
+// typeorm -c ormconfig 在无node环境下路径拼接 './src/'
+// 运行环境 or 生产环境 config文件层级在root/ 拼接路径为 '..'
+const prefixPath = (type: 'app' | 'config' = 'app') => {
+  if (type === 'app' || (process.env.NODE_ENV && type === 'config')) {
+    return '..';
   }
-  return {};
+  if (!process.env.NODE_ENV) {
+    return './src/';
+  }
+  return '..';
 };
 
-const config = merge(
-  paramConfigByYml(DEFAULT_CONFIG),
-  paramConfigByYml(CURRENT),
-);
+function getConfiguration(type: 'app' | 'config') {
+  const paramConfigByYml = (yml: string): ConfigObject => {
+    const dir = join(__dirname, `${prefixPath(type)}/config`, yml);
+    if (existsSync(dir)) {
+      const ymlFIle = readFileSync(dir, 'utf8');
+      return yaml.load(ymlFIle);
+    }
+    return {};
+  };
+  return merge(paramConfigByYml(DEFAULT_CONFIG), paramConfigByYml(CURRENT));
+}
 
-export default config;
+export default getConfiguration;

@@ -1,11 +1,10 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
-import configuration from './src/configuration';
 import * as dbEnumTs from './src/enum/db.enum';
-import { log } from 'console';
+import getConfiguration from './src/configuration';
 
 function connectionOptions() {
-  const config = (key: string) => configuration['db'][key];
+  const config = (key: string) => getConfiguration('config')['db'][key];
   const entitiesDir = [__dirname + '/**/entities/*.entity{.ts,.js}'];
   return {
     type: config(dbEnumTs.ConfigDbEnum.DB_TYPE),
@@ -29,6 +28,9 @@ const connectionParams = connectionOptions();
 export { connectionParams };
 export default new DataSource({
   ...connectionParams,
-  migrations: ['src/migrations/**'],
+  // migration:generate 执行和检测路径
+  // 在执行 migration:generate 之前需要先执行 migration:create
+  // 有了初始的 migration:create 后执行的 migration:generate 需要在更新的表（模块）xx.module 中imports:[TypeOrmModule.forFeature([Device])](导入entity)
+  migrations: ['./src/migrations/**/*{.js,.ts}'],
   subscribers: [],
 } as DataSourceOptions);

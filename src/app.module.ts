@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { HttpModule } from './common/http/http.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
-import Configuration from './configuration';
+import getConfiguration from './configuration';
 import { connectionParams } from '../ormconfig';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserModule } from './module/user/user.module';
@@ -18,7 +18,7 @@ import { DeviceModule } from './module/device/device.module';
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,
-      load: [() => Configuration],
+      load: [() => getConfiguration('app')],
       validationSchema: Joi.object({
         DB: Joi.object({
           DB_TYPE: Joi.string().valid('mysql', 'postgres'),

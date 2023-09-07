@@ -52,9 +52,9 @@ export class UserController {
 
   // Interceptor 转换响应 Dto 通过 plainToInstance form class-transformer
   // Guard 验证用户是否是自己
+  @Get(':id')
   @Serialize(UserDto)
   @UseGuards(UserGuard)
-  @Get(':id')
   async getUserById(@Param('id') id: string) {
     const data = await this.userService.findOne(id);
     if (data) {
