@@ -5,8 +5,9 @@ import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigJwtEnum } from 'src/enum/db.enum';
+import { ConfigJwtEnum } from '../../enum/db.enum';
 import { JwtStrategy } from './jwt.strategy';
+import { log } from 'console';
 
 @Module({
   imports: [

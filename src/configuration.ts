@@ -3,6 +3,7 @@ import * as yaml from 'js-yaml';
 import { join } from 'path';
 import { merge } from 'lodash';
 import { ConfigObject } from '@nestjs/config';
+import { log } from 'console';
 
 const DEFAULT_CONFIG = 'config.yml';
 const DEVELOPMENT_CONFIG = 'config.development.yml';
@@ -12,7 +13,7 @@ const ENV = process.env.NODE_ENV;
 const CURRENT = ENV === 'development' ? DEVELOPMENT_CONFIG : PRODUCTION_CONFIG;
 
 const paramConfigByYml = (yml: string): ConfigObject => {
-  const dir = join(__dirname, '../../config', yml);
+  const dir = join(__dirname, './config', yml);
   if (existsSync(dir)) {
     const ymlFIle = readFileSync(dir, 'utf8');
     return yaml.load(ymlFIle);
@@ -20,6 +21,9 @@ const paramConfigByYml = (yml: string): ConfigObject => {
   return {};
 };
 
-const C = merge(paramConfigByYml(DEFAULT_CONFIG), paramConfigByYml(CURRENT));
+const config = merge(
+  paramConfigByYml(DEFAULT_CONFIG),
+  paramConfigByYml(CURRENT),
+);
 
-export default () => C;
+export default config;

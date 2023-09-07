@@ -5,11 +5,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import Configuration from './configuration';
 import { connectionParams } from '../ormconfig';
+import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserModule } from './module/user/user.module';
 import { LogsModule } from './module/logs/logs.module';
 import { RolesModule } from './module/roles/roles.module';
 import { AuthModule } from './module/auth/auth.module';
-import { JwtAuthGuard } from './guards/jwt.guard';
+import { DeviceModule } from './module/device/device.module';
 
 @Global()
 @Module({
@@ -17,7 +18,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
     ConfigModule.forRoot({
       isGlobal: true,
       ignoreEnvFile: true,
-      load: [Configuration],
+      load: [() => Configuration],
       validationSchema: Joi.object({
         DB: Joi.object({
           DB_TYPE: Joi.string().valid('mysql', 'postgres'),
@@ -39,6 +40,7 @@ import { JwtAuthGuard } from './guards/jwt.guard';
     LogsModule,
     RolesModule,
     AuthModule,
+    DeviceModule,
   ],
   controllers: [],
   providers: [
