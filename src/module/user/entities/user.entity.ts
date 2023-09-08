@@ -32,7 +32,7 @@ export class User {
   profile?: UserProfile;
 
   @OneToMany(() => Log, (log) => log.user, { cascade: true })
-  logs: Log[];
+  logs?: Log[];
 
   @ManyToMany(() => Roles, (roles) => roles.users, {
     cascade: ['insert'],

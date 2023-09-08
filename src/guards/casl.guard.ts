@@ -19,6 +19,8 @@ export class CaslGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const req = context.switchToHttp().getRequest();
+
     // [自定义] 单个为=(function),多个为=([function,function])
     const handlers = this.reflector.getAllAndMerge(
       CASL_ABILITY_KEY.PUBLICY_HANDLER,
@@ -39,26 +41,29 @@ export class CaslGuard implements CanActivate {
       return true;
     }
 
-    const ability = this.caslAbilityService.forRoot();
-    let flag = true;
-    if (handlers) {
-      flag = flag && handlers.every((handle) => handle(ability));
-    }
-    if (canHandlers) {
-      if (canHandlers instanceof Array) {
-        flag = flag && canHandlers.every((handle) => handle(ability));
-      } else if (typeof canHandlers === 'function') {
-        flag = flag && canHandlers(ability);
+    // 将req.user传递casl服务
+    if (req.user) {
+      const ability = this.caslAbilityService.forRoot(req.user.username);
+      let flag = true;
+      if (handlers) {
+        flag = flag && handlers.every((handle) => handle(ability));
       }
-    }
-    if (cannotHandlers) {
-      if (cannotHandlers instanceof Array) {
-        flag = flag && cannotHandlers.every((handle) => handle(ability));
-      } else if (typeof cannotHandlers === 'function') {
-        flag = flag && cannotHandlers(ability);
+      if (canHandlers) {
+        if (canHandlers instanceof Array) {
+          flag = flag && canHandlers.every((handle) => handle(ability));
+        } else if (typeof canHandlers === 'function') {
+          flag = flag && canHandlers(ability);
+        }
       }
+      if (cannotHandlers) {
+        if (cannotHandlers instanceof Array) {
+          flag = flag && cannotHandlers.every((handle) => handle(ability));
+        } else if (typeof cannotHandlers === 'function') {
+          flag = flag && cannotHandlers(ability);
+        }
+      }
+      return flag;
     }
-
-    return flag;
+    return false;
   }
 }

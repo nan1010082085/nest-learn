@@ -19,7 +19,7 @@ import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { JwtRequest } from '../../interface';
 import { Can } from '../../decorators/casl.decorator';
 import { Action } from '../../enum/action.enum';
-import { CaslGuard } from 'src/guards/casl.guard';
+import { CaslGuard } from '../../guards/casl.guard';
 
 @Controller('logs')
 @UseGuards(CaslGuard)

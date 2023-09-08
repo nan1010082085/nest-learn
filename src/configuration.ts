@@ -3,6 +3,7 @@ import * as yaml from 'js-yaml';
 import { join } from 'path';
 import { merge } from 'lodash';
 import { ConfigObject } from '@nestjs/config';
+import { log } from 'console';
 
 const DEFAULT_CONFIG = 'config.yml';
 const DEVELOPMENT_CONFIG = 'config.development.yml';
@@ -13,6 +14,10 @@ const CURRENT = ENV ? DEVELOPMENT_CONFIG : PRODUCTION_CONFIG;
 // config文件在运行时路径在 root/config 由 configuration 获取path前缀为 '..'
 // config在非运行时路径在 root/src/ 由 configuration 获取path前缀为 './src/'
 const prefixPath = (type: 'app' | 'config' = 'app') => {
+  if (process.env.NODE_ENV === 'test') {
+    return '.';
+  }
+  // 开发development和生产production
   if (type === 'app' || (process.env.NODE_ENV && type === 'config')) {
     return '..';
   }

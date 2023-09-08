@@ -11,7 +11,7 @@ import { Log } from '../logs/entities/log.entity';
 
 @Injectable()
 export default class CaslAbilityService<T> {
-  forRoot() {
+  forRoot(username: string) {
     const { can, build } = new AbilityBuilder(createMongoAbility);
 
     // test

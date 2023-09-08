@@ -1,7 +1,7 @@
 export enum Action {
-  MANAGE = 'MANAGE',
-  CREATE = 'CREATE',
-  UPDATE = 'UPDATE',
-  READ = 'READ',
-  DELETE = 'DELETE',
+  MANAGE = 'manage',
+  CREATE = 'create',
+  UPDATE = 'update',
+  READ = 'read',
+  DELETE = 'delete',
 }

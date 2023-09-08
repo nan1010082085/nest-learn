@@ -1,21 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { RolesService } from '../roles.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { Roles } from '../entities/roles.entity';
 
 describe('RolesService', () => {
   let service: RolesService;
+  let mockRepository: Partial<Repository<Roles>>;
 
   beforeEach(async () => {
+    mockRepository = {};
+
     const module: TestingModule = await Test.createTestingModule({
-      imports: [TypeOrmModule.forFeature([Roles])],
-      providers: [RolesService],
+      providers: [
+        RolesService,
+        {
+          provide: 'RolesRepository',
+          useValue: mockRepository,
+        },
+      ],
     }).compile();
 
     service = module.get<RolesService>(RolesService);
   });
 
-  it('should be defined', () => {
+  it('Roles Service 实例', () => {
     expect(service).toBeDefined();
   });
 });
