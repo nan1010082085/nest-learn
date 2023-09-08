@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { exceptionMessage } from '../common/message';
 
 // import * as requestIp from 'request-ip';
 import { QueryFailedError } from 'typeorm';
@@ -52,7 +53,7 @@ export class AllExceptionFilter<T> implements ExceptionFilter {
       code,
       path: request.url,
       method: request.method,
-      message: msg,
+      message: exceptionMessage(code, msg),
       timestamp: new Date().toISOString(),
       // headers: request.headers,
       // query: request.query,

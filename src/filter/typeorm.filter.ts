@@ -7,6 +7,7 @@
  */
 
 import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { exceptionMessage } from '../common/message';
 import { QueryFailedError, TypeORMError } from 'typeorm';
 
 // 字段 {unique:true}
@@ -24,7 +25,7 @@ export class TypeormFilter implements ExceptionFilter {
     return response.status(500).json({
       code,
       timestamp: new Date().toISOString(),
-      message: exception.message,
+      message: exceptionMessage(code, exception.message),
     });
   }
 }
