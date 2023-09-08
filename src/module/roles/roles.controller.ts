@@ -18,7 +18,6 @@ import { Serialize } from './../../decorator/serialize.decorator';
 import { RoleDto } from './dto/role.dto';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
-import { log } from 'console';
 
 @Controller('roles')
 export class RolesController {

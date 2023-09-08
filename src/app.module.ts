@@ -11,6 +11,7 @@ import { LogsModule } from './module/logs/logs.module';
 import { RolesModule } from './module/roles/roles.module';
 import { AuthModule } from './module/auth/auth.module';
 import { DeviceModule } from './module/device/device.module';
+import { MenusModule } from './module/menus/menus.module';
 
 @Global()
 @Module({
@@ -41,6 +42,7 @@ import { DeviceModule } from './module/device/device.module';
     RolesModule,
     AuthModule,
     DeviceModule,
+    MenusModule,
   ],
   controllers: [],
   providers: [

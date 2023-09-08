@@ -1,5 +1,12 @@
 import { User } from '../../user/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Log {
@@ -20,4 +27,10 @@ export class Log {
 
   @ManyToOne(() => User, (user) => user.logs, { onDelete: 'CASCADE' })
   user: User;
+
+  @CreateDateColumn()
+  createDate: string;
+
+  @UpdateDateColumn()
+  updateDate: string;
 }

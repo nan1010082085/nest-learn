@@ -1,12 +1,14 @@
 import {
   AfterRemove,
   Column,
+  CreateDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { UserProfile } from './user.profile.entity';
 import { log } from 'console';
@@ -42,4 +44,10 @@ export class User {
   afterRemoveUser() {
     log('after-remove', this.username);
   }
+
+  @CreateDateColumn()
+  createDate: string;
+
+  @UpdateDateColumn()
+  updateDate: string;
 }

@@ -17,7 +17,7 @@ const prefixPath = (type: 'app' | 'config' = 'app') => {
     return '..';
   }
   if (!process.env.NODE_ENV) {
-    return './src';
+    return '.';
   }
   return '..';
 };
