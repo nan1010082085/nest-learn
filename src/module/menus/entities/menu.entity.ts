@@ -25,7 +25,9 @@ export class Menu {
   @Column({ type: 'simple-array' })
   acl: string[];
 
+  // 每个角色有多个菜单
   @ManyToMany(() => Roles, (role) => role.menus)
+  // 生成关联的表文件
   @JoinTable({ name: 'role_menus' })
   role: Roles;
 }

@@ -10,6 +10,7 @@
     "watchAssets": true
   },
   "generateOptions": {
-    "spec": false
+    "spec": false,
+    "flat": true
   }
 }

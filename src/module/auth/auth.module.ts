@@ -1,5 +1,5 @@
 import { ConfigService } from '@nestjs/config';
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UserModule } from '../user/user.module';
@@ -8,7 +8,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigJwtEnum } from '../../enum/db.enum';
 import { JwtStrategy } from './jwt.strategy';
 import { log } from 'console';
+import CaslAbilityService from './casl-ability.service';
 
+@Global()
 @Module({
   imports: [
     UserModule,
@@ -27,6 +29,7 @@ import { log } from 'console';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, CaslAbilityService],
+  exports: [CaslAbilityService],
 })
 export class AuthModule {}

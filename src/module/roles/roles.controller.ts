@@ -14,7 +14,7 @@ import { RolesService } from './roles.service';
 import { PaginationDto } from '../../dto/pagination.dto';
 import { HttpService } from '../../common/http/http.service';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
-import { Serialize } from './../../decorator/serialize.decorator';
+import { Serialize } from '../../decorators/serialize.decorator';
 import { RoleDto } from './dto/role.dto';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';

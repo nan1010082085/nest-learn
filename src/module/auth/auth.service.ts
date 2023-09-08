@@ -18,7 +18,7 @@ export class AuthService {
     }
 
     const isPassword = await argon2.verify(user.password, pass);
-    log(isPassword);
+
     if (!isPassword) {
       throw new ForbiddenException('用户名或密码错误。');
     }

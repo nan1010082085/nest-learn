@@ -19,17 +19,13 @@ import { TypeormFilter } from '../../filter/typeorm.filter';
 import { HttpService } from '../../common/http/http.service';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { UserGuard } from '../../guards/user.guard';
-import { RoleGuard } from './../../guards/role.guard';
-import { RoleValidator } from './../../decorator/role-validator.decorator';
-import { PublicRoute } from './../../decorator/public-route.decorator';
-import { Serialize } from './../../decorator/serialize.decorator';
+import { PublicRoute } from '../../decorators/public-route.decorator';
+import { Serialize } from '../../decorators/serialize.decorator';
 import { UserDto } from './dto/user.dto';
 import { CreateDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('user')
-@RoleValidator(6)
-@UseGuards(RoleGuard)
 @UseFilters(new TypeormFilter())
 export class UserController {
   constructor(

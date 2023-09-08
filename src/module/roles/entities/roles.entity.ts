@@ -15,6 +15,7 @@ export class Roles {
   })
   users: User[];
 
+  // 一个角色关联多个菜单
   @ManyToMany(() => Menu, (menu) => menu.role)
   menus: Menu[];
 }
