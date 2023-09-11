@@ -6,10 +6,7 @@ import { ConfigObject } from '@nestjs/config';
 import { log } from 'console';
 
 const DEFAULT_CONFIG = 'config.yml';
-const DEVELOPMENT_CONFIG = 'config.development.yml';
-const PRODUCTION_CONFIG = 'config.production.yml';
-const ENV = process.env.NODE_ENV === 'development';
-const CURRENT = ENV ? DEVELOPMENT_CONFIG : PRODUCTION_CONFIG;
+const CURRENT = `config.${process.env.NODE_ENV}.yml`;
 
 // config文件在运行时路径在 root/config 由 configuration 获取path前缀为 '..'
 // config在非运行时路径在 root/src/ 由 configuration 获取path前缀为 './src/'

@@ -2,6 +2,7 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dbEnumTs from './src/enum/db.enum';
 import getConfiguration from './src/configuration';
+import { log } from 'console';
 
 function connectionOptions() {
   const config = (key: string) => getConfiguration('config')['db'][key];
@@ -26,6 +27,7 @@ function connectionOptions() {
 const connectionParams = connectionOptions();
 
 export { connectionParams };
+
 export default new DataSource({
   ...connectionParams,
   // migration:generate 执行和检测路径

@@ -15,7 +15,6 @@ export class AuthController {
   @PublicRoute()
   @Post('login')
   login(@Body() dto: any) {
-    log('auth login', dto);
     const { username, password } = dto;
     return this.authService.login(username, password);
   }
