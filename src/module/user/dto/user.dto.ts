@@ -1,6 +1,6 @@
 import { Exclude, Expose, Transform } from 'class-transformer';
 import { UserProfile } from '../entities/user.profile.entity';
-import { RoleDto } from 'src/module/roles/dto/role.dto';
+import { RoleDto } from '../../roles/dto/role.dto';
 
 export class UserDto {
   @Expose()

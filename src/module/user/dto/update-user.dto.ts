@@ -1,6 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { UserProfile } from '../entities/user.profile.entity';
-import { Roles } from 'src/module/roles/entities/roles.entity';
+import { Roles } from '../../roles/entities/roles.entity';
 import { User } from '../entities/user.entity';
 import { Allow } from 'class-validator';
 

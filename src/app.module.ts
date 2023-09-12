@@ -1,17 +1,12 @@
 import { Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { HttpModule } from './common/http/http.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import getConfiguration from './configuration';
 import { connectionParams } from '../ormconfig';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { UserModule } from './module/user/user.module';
-import { LogsModule } from './module/logs/logs.module';
-import { RolesModule } from './module/roles/roles.module';
-import { AuthModule } from './module/auth/auth.module';
-import { DeviceModule } from './module/device/device.module';
-import { MenusModule } from './module/menus/menus.module';
+import modules from './module';
+import dynamicModules from './dynamic-module';
 
 @Global()
 @Module({
@@ -36,13 +31,8 @@ import { MenusModule } from './module/menus/menus.module';
       }),
     }),
     TypeOrmModule.forRoot(connectionParams),
-    HttpModule.forRoot({ isGlobal: true }),
-    UserModule,
-    LogsModule,
-    RolesModule,
-    AuthModule,
-    DeviceModule,
-    MenusModule,
+    ...dynamicModules,
+    ...modules,
   ],
   controllers: [],
   providers: [

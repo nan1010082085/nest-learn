@@ -11,7 +11,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { UserProfile } from './user.profile.entity';
-import { log } from 'console';
 import { Log } from '../../logs/entities/log.entity';
 import { Roles } from '../../roles/entities/roles.entity';
 
@@ -40,10 +39,10 @@ export class User {
   @JoinTable({ name: 'user_roles' })
   roles?: Roles[];
 
-  @AfterRemove()
-  afterRemoveUser() {
-    log('after-remove', this.username);
-  }
+  // @AfterRemove()
+  // afterRemoveUser() {
+  //   log('after-remove', this.username);
+  // }
 
   @CreateDateColumn()
   createDate: string;

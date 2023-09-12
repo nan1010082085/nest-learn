@@ -3,6 +3,7 @@ import { AllExceptionFilter } from './filter/all-exception.filter';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
+
 export function setup(app: INestApplication) {
   // 设置Api全局前缀
   app.setGlobalPrefix('api/v1');

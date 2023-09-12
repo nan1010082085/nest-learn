@@ -5,24 +5,6 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "args": [
-        "-u",
-        "tdd",
-        "--timeout",
-        "999999",
-        "--colors",
-        "${workspaceFolder}/test"
-      ],
-      "internalConsoleOptions": "openOnSessionStart",
-      "name": "Jest Tests",
-      "program": "${workspaceFolder}/node_modules/jest/bin/jest",
-      "request": "launch",
-      "skipFiles": [
-        "<node_internals>/**"
-      ],
-      "type": "node"
-    },
-    {
       "name": "Debug Neset-demo",
       "request": "launch",
       "runtimeArgs": [

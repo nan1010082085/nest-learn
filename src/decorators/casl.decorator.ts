@@ -1,7 +1,6 @@
 import { AnyMongoAbility, InferSubjects } from '@casl/ability';
 import { SetMetadata } from '@nestjs/common';
 import { Action } from '../enum/action.enum';
-import { type } from 'os';
 
 export enum CASL_ABILITY_KEY {
   PUBLICY_HANDLER = 'PUBLICY_HANDLER',

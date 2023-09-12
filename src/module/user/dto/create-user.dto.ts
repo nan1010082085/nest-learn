@@ -1,5 +1,5 @@
 import { IsString, IsNotEmpty, MinLength, Allow } from 'class-validator';
-import { Roles } from 'src/module/roles/entities/roles.entity';
+import { Roles } from '../../roles/entities/roles.entity';
 export class CreateDto {
   @IsString()
   @IsNotEmpty()
