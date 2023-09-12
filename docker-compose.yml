@@ -13,7 +13,7 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: testdb
     ports:
-      - 3306:3306
+      - 12306:3306
   db2:
     image: mysql
     # NOTE: use of "mysql_native_password" is not recommended: https://dev.mysql.com/doc/refman/8.0/en/upgrading-from-previous-series.html#upgrade-caching-sha2-password
@@ -24,4 +24,4 @@ services:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: testdb1
     ports:
-      - 3307:3307
+      - 12307:3307

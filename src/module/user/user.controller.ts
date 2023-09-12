@@ -24,8 +24,10 @@ import { Serialize } from '../../decorators/serialize.decorator';
 import { UserDto } from './dto/user.dto';
 import { CreateDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { CaslGuard } from '../../guards/casl.guard';
 
 @Controller('user')
+@UseGuards(CaslGuard)
 @UseFilters(new TypeormFilter())
 export class UserController {
   constructor(

@@ -30,7 +30,7 @@ describe('AuthController', () => {
         return Promise.resolve({ token });
       },
       logout: (dto) => {
-        return Promise.resolve(dto);
+        return { token: '' };
       },
     };
     const module: TestingModule = await Test.createTestingModule({
@@ -78,6 +78,7 @@ describe('AuthController', () => {
     const headers = {
       req: {
         username: 1,
+        userId: '1id',
       },
     };
     const logout = await controller.logout(dto, headers);
@@ -86,6 +87,6 @@ describe('AuthController', () => {
 
     expect(logout).toEqual(logout);
 
-    expect(logout.username).toBe(1);
+    expect(logout.token).toBe('');
   });
 });

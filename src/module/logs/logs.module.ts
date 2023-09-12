@@ -54,40 +54,40 @@ function createDailyRotateFile(
 @Module({
   imports: [
     TypeOrmModule.forFeature([Log]),
-    // WinstonModule.forRootAsync({
-    //   inject: [ConfigService],
-    //   useFactory: (configService: ConfigService) => {
-    //     const config = (key: string) => configService.get(`log.${key}`);
+    WinstonModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const config = (key: string) => configService.get(`log.${key}`);
 
-    //     const dir = config(ConfigLogEnum.PATH);
+        const dir = config(ConfigLogEnum.PATH);
 
-    //     const consoleTransport = new Console({
-    //       level: 'info',
-    //       format: winston.format.combine(
-    //         winston.format.timestamp(),
-    //         winston.format.ms(),
-    //         utilities.format.nestLike(),
-    //       ),
-    //     });
+        const consoleTransport = new Console({
+          level: 'info',
+          format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.ms(),
+            utilities.format.nestLike(),
+          ),
+        });
 
-    //     return {
-    //       transports: [
-    //         consoleTransport,
-    //         ...(config(ConfigLogEnum.ON)
-    //           ? [
-    //               createDailyRotateFile('info', 'info', {
-    //                 dirname: dir,
-    //               }),
-    //               createDailyRotateFile('warn', 'error', {
-    //                 dirname: dir,
-    //                 formatSimple: false,
-    //               }),
-    //             ]
-    //           : []),
-    //       ],
-    //     };
-    //   },
-    // }),
+        return {
+          transports: [
+            consoleTransport,
+            ...(config(ConfigLogEnum.ON)
+              ? [
+                  createDailyRotateFile('info', 'info', {
+                    dirname: dir,
+                  }),
+                  createDailyRotateFile('warn', 'error', {
+                    dirname: dir,
+                    formatSimple: false,
+                  }),
+                ]
+              : []),
+          ],
+        };
+      },
+    }),
     UserModule,
   ],
   controllers: [LogsController],

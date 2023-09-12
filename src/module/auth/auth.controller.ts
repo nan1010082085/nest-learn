@@ -7,6 +7,7 @@ import { PublicRoute } from '../../decorators/public-route.decorator';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @PublicRoute()
   @Get()
   getAuth() {
     return 'test auth api successful';
@@ -21,7 +22,7 @@ export class AuthController {
 
   @Post('logout')
   logout(@Body() dto: any, @Headers() headers) {
-    log(headers);
+    // log(headers);
     return this.authService.logout(dto);
   }
 }

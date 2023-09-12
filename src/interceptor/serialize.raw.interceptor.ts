@@ -49,7 +49,6 @@ export class SerializeRawInterceptor implements NestInterceptor {
     // const http = context.switchToHttp();
     return next.handle().pipe(
       map((res) => {
-        log(res.data);
         res.data = this.transform(res.data);
         return res;
       }),

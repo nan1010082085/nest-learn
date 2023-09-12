@@ -32,6 +32,6 @@ export class AuthService {
   }
 
   logout(dto: any) {
-    return dto;
+    return { token: '' };
   }
 }

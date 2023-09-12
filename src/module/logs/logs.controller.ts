@@ -17,13 +17,10 @@ import { HttpService } from '../../common/http/http.service';
 import { PaginationDto } from '../../dto/pagination.dto';
 import { PaginationPipe } from '../../pipes/pagination.pipe';
 import { JwtRequest } from '../../interface';
-import { Can } from '../../decorators/casl.decorator';
-import { Action } from '../../enum/action.enum';
 import { CaslGuard } from '../../guards/casl.guard';
 
 @Controller('logs')
 @UseGuards(CaslGuard)
-@Can(Action.DELETE, Log)
 export class LogsController {
   constructor(
     private readonly httpService: HttpService,

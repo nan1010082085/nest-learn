@@ -68,7 +68,7 @@ export class UserService {
       .leftJoinAndSelect('user.roles', 'roles')
       .where('user.id = :id', { id })
       .getOne();
-    // log(data);
+
     return data;
   }
 
