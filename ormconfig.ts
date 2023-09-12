@@ -2,10 +2,11 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as dbEnumTs from './src/enum/db.enum';
 import getConfiguration from './src/configuration';
+import { get } from 'lodash';
 import { log } from 'console';
 
 function connectionOptions() {
-  const config = (key: string) => getConfiguration('config')['db'][key];
+  const config = (key: string) => get(getConfiguration('config'), `db.${key}`);
   const entitiesDir = [__dirname + '/**/entities/*.entity{.ts,.js}'];
   return {
     type: config(dbEnumTs.ConfigDbEnum.DB_TYPE),

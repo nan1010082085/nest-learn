@@ -5,15 +5,14 @@ export interface UseUserDataType {
   prefix: string;
   // 测试用户名称和密码
   userDto: Partial<{ username: string; password: string }>;
+  // 设置初始URL
   setDefaultUrl: () => void;
-  create: () => Promise<{ id: string }>;
+  // 创建用户
+  createUser: () => Promise<{ id: string }>;
+  // 获取鉴权登陆jwt token
   getToken: () => Promise<{ id: string; token: string }>;
 }
 
-/**
- *
- * @returns
- */
 export function useUserData(): UseUserDataType {
   const prefix = '/api/v1';
 
@@ -27,7 +26,7 @@ export function useUserData(): UseUserDataType {
   };
 
   // 创建用户
-  const create = async (): Promise<{ id: string }> => {
+  const createUser = async (): Promise<{ id: string }> => {
     const id = await pactum
       .spec()
       .post(prefix + '/user/create')
@@ -57,7 +56,7 @@ export function useUserData(): UseUserDataType {
     prefix,
     userDto,
     setDefaultUrl,
-    create,
+    createUser,
     getToken,
   };
 }

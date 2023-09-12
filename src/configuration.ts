@@ -10,7 +10,7 @@ const CURRENT = `config.${process.env.NODE_ENV}.yml`;
 
 // config文件在运行时路径在 root/config 由 configuration 获取path前缀为 '..'
 // config在非运行时路径在 root/src/ 由 configuration 获取path前缀为 './src/'
-const prefixPath = (type: 'app' | 'config' = 'app') => {
+function prefixPath(type: 'app' | 'config' = 'app') {
   if (process.env.NODE_ENV === 'test') {
     return '.';
   }
@@ -22,8 +22,9 @@ const prefixPath = (type: 'app' | 'config' = 'app') => {
     return '.';
   }
   return '..';
-};
+}
 
+// fs 读取config.*.yml
 function getConfiguration(type: 'app' | 'config') {
   const paramConfigByYml = (yml: string): ConfigObject => {
     const dir = join(__dirname, `${prefixPath(type)}/config`, yml);
